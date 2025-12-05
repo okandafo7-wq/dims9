@@ -139,12 +139,14 @@ const ISOCompliance = ({ user, api }) => {
       resolved: safetyResolved,
       description: 'ISO 45001 specifies requirements for an occupational health and safety management system, enabling organizations to provide safe and healthy workplaces by preventing work-related injury and ill health.',
       keyRequirements: [
-        'Hazard identification and risk assessment',
-        'Worker participation and consultation',
-        'Legal compliance and obligations',
-        'Emergency preparedness protocols',
-        'Incident investigation and analysis',
-        'Health and safety performance monitoring'
+        'Hazard identification (6.1.2.1) - Ongoing identification of workplace hazards',
+        'Risk assessment (6.1.2.2) - Evaluate OH&S risks and opportunities',
+        'Worker participation (5.4) - Involve workers in OH&S management',
+        'Legal requirements (6.1.3) - Identify and comply with OH&S obligations',
+        'Competence (7.2) - Ensure worker competency for safe operations',
+        'Operational control (8.1.2) - Eliminate hazards and reduce risks',
+        'Emergency preparedness (8.2) - Plan for potential emergency situations',
+        'Incident investigation (10.2) - Investigate and prevent recurrence'
       ],
       benefits: [
         'Reduced workplace accidents and injuries',
