@@ -1,0 +1,88 @@
+{
+  "summary": {
+    "total_tests": 13,
+    "passed_tests": 12,
+    "success_rate": 92.3076923076923,
+    "timestamp": "2025-12-05T12:34:31.100389"
+  },
+  "detailed_results": [
+    {
+      "test": "User Registration",
+      "success": true,
+      "details": "Status: 200, Response keys: ['access_token', 'token_type', 'user']",
+      "timestamp": "2025-12-05T12:34:30.367178"
+    },
+    {
+      "test": "User Login",
+      "success": true,
+      "details": "Status: 200, Response keys: ['access_token', 'token_type', 'user']",
+      "timestamp": "2025-12-05T12:34:30.634366"
+    },
+    {
+      "test": "Get Current User",
+      "success": true,
+      "details": "Status: 200, Response keys: ['id', 'email', 'name', 'role', 'created_at']",
+      "timestamp": "2025-12-05T12:34:30.676694"
+    },
+    {
+      "test": "Initialize Dummy Data",
+      "success": true,
+      "details": "Status: 200, Response keys: ['message']",
+      "timestamp": "2025-12-05T12:34:30.780268"
+    },
+    {
+      "test": "Get All Farms",
+      "success": true,
+      "details": "Status: 200, Response keys: Non-dict response",
+      "timestamp": "2025-12-05T12:34:30.821097"
+    },
+    {
+      "test": "Farms Data Validation",
+      "success": true,
+      "details": "Found 3 farms",
+      "timestamp": "2025-12-05T12:34:30.821779"
+    },
+    {
+      "test": "Get Single Farm",
+      "success": true,
+      "details": "Status: 200, Response keys: ['id', 'farm_name', 'location', 'area_hectares', 'crop_type', 'growth_stage', 'health_status', 'temperature', 'humidity', 'soil_moisture', 'predicted_yield', 'last_updated']",
+      "timestamp": "2025-12-05T12:34:30.861519"
+    },
+    {
+      "test": "Create New Farm",
+      "success": true,
+      "details": "Status: 200, Response keys: ['id', 'farm_name', 'location', 'area_hectares', 'crop_type', 'growth_stage', 'health_status', 'temperature', 'humidity', 'soil_moisture', 'predicted_yield', 'last_updated']",
+      "timestamp": "2025-12-05T12:34:30.903572"
+    },
+    {
+      "test": "Get ESG Metrics",
+      "success": true,
+      "details": "Status: 200, Response keys: Non-dict response",
+      "timestamp": "2025-12-05T12:34:30.940014"
+    },
+    {
+      "test": "ESG Data Validation",
+      "success": true,
+      "details": "Found 3 ESG records",
+      "timestamp": "2025-12-05T12:34:30.940692"
+    },
+    {
+      "test": "Create ESG Metric",
+      "success": true,
+      "details": "Status: 200, Response keys: ['id', 'period', 'water_usage', 'carbon_footprint', 'waste_reduced', 'renewable_energy', 'women_employed', 'training_hours', 'income_growth', 'iso9001_score', 'iso14001_score', 'iso45001_score', 'audit_compliance', 'timestamp']",
+      "timestamp": "2025-12-05T12:34:31.017989"
+    },
+    {
+      "test": "Get Non-existent Farm",
+      "success": true,
+      "details": "Status: 404, Response keys: ['detail']",
+      "timestamp": "2025-12-05T12:34:31.060219"
+    },
+    {
+      "test": "Unauthorized Access Test",
+      "success": false,
+      "details": "Expected 401, got 500. Response: Internal Server Error",
+      "timestamp": "2025-12-05T12:34:31.099469"
+    }
+  ]
+}
