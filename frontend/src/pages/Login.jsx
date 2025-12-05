@@ -11,7 +11,8 @@ import { Sprout, Users, Target, Leaf } from 'lucide-react';
 const Login = ({ setUser, api }) => {
   const navigate = useNavigate();
   const [loginData, setLoginData] = useState({ email: '', password: '' });
-  const [registerData, setRegisterData] = useState({ name: '', email: '', password: '', role: 'farmer' });
+  const [registerData, setRegisterData] = useState({ name: '', email: '', password: '', role: 'manager', cooperative_id: '' });
+  const [cooperatives, setCooperatives] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e) => {
