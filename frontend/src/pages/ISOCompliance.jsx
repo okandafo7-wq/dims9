@@ -81,12 +81,14 @@ const ISOCompliance = ({ user, api }) => {
       resolved: qualityResolved,
       description: 'ISO 9001 sets out the criteria for a quality management system and is based on principles including strong customer focus, involvement of top management, process approach, and continual improvement.',
       keyRequirements: [
-        'Customer focus and satisfaction',
-        'Leadership and strategic direction',
-        'Process-based quality management',
-        'Evidence-based decision making',
-        'Continual improvement culture',
-        'Supplier relationship management'
+        'Context of the organization (4.1) - Understanding organizational context and stakeholder needs',
+        'Leadership and commitment (5.1) - Top management accountability for QMS effectiveness',
+        'Risk-based thinking (6.1) - Proactive risk and opportunity management',
+        'Operational planning and control (8.1) - Controlled production and service provision',
+        'Product/service conformity (8.5) - Control of outputs to meet requirements',
+        'Monitoring and measurement (9.1) - Performance evaluation and customer satisfaction',
+        'Nonconformity and corrective action (10.2) - Systematic problem resolution',
+        'Continual improvement (10.3) - Ongoing QMS enhancement'
       ],
       benefits: [
         'Improved product and service quality',
