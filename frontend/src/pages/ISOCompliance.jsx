@@ -5,7 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { ArrowLeft, Award, CheckCircle, Shield, Leaf, AlertCircle, FileCheck, BookOpen } from 'lucide-react';
+import { ArrowLeft, Award, CheckCircle, Shield, Leaf, AlertCircle, FileCheck, BookOpen, Users, Target } from 'lucide-react';
+import ISOLogo from '@/components/ISOLogo';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Tooltip, ResponsiveContainer } from 'recharts';
 import { toast } from 'sonner';
 
