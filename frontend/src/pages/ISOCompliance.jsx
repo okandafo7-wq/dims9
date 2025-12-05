@@ -238,10 +238,10 @@ const ISOCompliance = ({ user, api }) => {
               {/* Standard Header */}
               <Card className={`border-0 shadow-lg bg-gradient-to-br ${standard.color} text-white`}>
                 <CardHeader>
-                  <div className="flex items-start justify-between">
+                  <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
                     <div className="flex items-start gap-4">
-                      <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
-                        <standard.icon className="w-8 h-8" />
+                      <div className="bg-white p-2 rounded-xl shadow-lg">
+                        <ISOLogo standard={standard.id.replace('iso', '')} size={70} />
                       </div>
                       <div>
                         <CardTitle className="text-2xl text-white">{standard.title}</CardTitle>
