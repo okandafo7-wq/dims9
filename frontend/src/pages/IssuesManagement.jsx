@@ -337,29 +337,46 @@ const IssuesManagement = ({ user, setUser, api }) => {
                             <p className="text-sm text-gray-600">{nc.corrective_action}</p>
                           </div>
 
-                          {nc.status !== 'closed' && (
-                            <div className="flex gap-2">
-                              {nc.status === 'open' && (
-                                <Button 
-                                  size="sm" 
-                                  onClick={() => handleStatusUpdate(nc.id, 'in_progress')}
-                                  data-testid={`start-${nc.id}`}
-                                >
-                                  Start Working
-                                </Button>
-                              )}
-                              {nc.status === 'in_progress' && (
-                                <Button 
-                                  size="sm" 
-                                  className="bg-green-600 hover:bg-green-700"
-                                  onClick={() => handleStatusUpdate(nc.id, 'closed')}
-                                  data-testid={`close-${nc.id}`}
-                                >
-                                  Mark as Closed
-                                </Button>
-                              )}
+                          {nc.assigned_to && (
+                            <div className="bg-blue-50 border border-blue-200 p-2 rounded-lg mt-2">
+                              <p className="text-xs text-blue-700">
+                                <strong>Assigned to:</strong> {nc.assigned_to}
+                              </p>
                             </div>
                           )}
+
+                          <div className="flex gap-2">
+                            {nc.status === 'open' && (
+                              <Button 
+                                size="sm" 
+                                onClick={() => handleStatusUpdate(nc.id, 'in_progress')}
+                                data-testid={`start-${nc.id}`}
+                              >
+                                Start Working
+                              </Button>
+                            )}
+                            {nc.status === 'in_progress' && (
+                              <Button 
+                                size="sm" 
+                                className="bg-green-600 hover:bg-green-700"
+                                onClick={() => handleStatusUpdate(nc.id, 'closed')}
+                                data-testid={`close-${nc.id}`}
+                              >
+                                Mark as Closed
+                              </Button>
+                            )}
+                            {nc.status === 'closed' && (
+                              <Button 
+                                size="sm" 
+                                variant="outline"
+                                className="border-orange-500 text-orange-600 hover:bg-orange-50"
+                                onClick={() => handleStatusUpdate(nc.id, 'open')}
+                                data-testid={`reopen-${nc.id}`}
+                              >
+                                Reopen Issue
+                              </Button>
+                            )}
+                          </div>
                         </div>
                       </CardContent>
                     </Card>
