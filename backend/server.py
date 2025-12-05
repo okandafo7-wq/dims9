@@ -430,6 +430,22 @@ async def initialize_mvp_data(current_user: dict = Depends(get_current_user)):
     if existing_coops > 0:
         return {"message": "MVP data already initialized"}
     
+    return await create_sample_data()
+
+@api_router.post("/reinit-data")
+async def reinitialize_data(current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'officer':
+        raise HTTPException(status_code=403, detail="Only officers can reinitialize data")
+    
+    # Clear existing data
+    await db.cooperatives.delete_many({})
+    await db.production_logs.delete_many({})
+    await db.nonconformities.delete_many({})
+    
+    return await create_sample_data()
+
+async def create_sample_data():
+    
     # Create 2 cooperatives
     cooperatives = [
         {
