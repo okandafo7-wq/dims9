@@ -105,6 +105,14 @@ function App() {
             path="/esg-reporting" 
             element={user ? <ESGReporting api={api} /> : <Navigate to="/login" />} 
           />
+          <Route 
+            path="/issues" 
+            element={user ? <IssuesManagement user={user} setUser={setUser} api={api} /> : <Navigate to="/login" />} 
+          />
+          <Route 
+            path="/data-entries" 
+            element={user ? <DataEntriesView user={user} setUser={setUser} api={api} /> : <Navigate to="/login" />} 
+          />
           
           <Route path="/" element={<Navigate to={getHomeRoute()} />} />
         </Routes>
