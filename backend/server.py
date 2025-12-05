@@ -313,12 +313,24 @@ async def get_nonconformities(
 @api_router.patch("/nonconformities/{nc_id}")
 async def update_nonconformity(
     nc_id: str,
-    status: str,
+    status: Optional[str] = None,
+    assigned_to: Optional[str] = None,
     current_user: dict = Depends(get_current_user)
 ):
-    update_data = {"status": status}
-    if status == "closed":
-        update_data["closed_date"] = datetime.now(timezone.utc).isoformat()
+    update_data = {}
+    
+    if status:
+        update_data["status"] = status
+        if status == "closed":
+            update_data["closed_date"] = datetime.now(timezone.utc).isoformat()
+        elif status == "open":  # reopening
+            update_data["closed_date"] = None
+    
+    if assigned_to is not None:
+        update_data["assigned_to"] = assigned_to
+    
+    if not update_data:
+        raise HTTPException(status_code=400, detail="No update data provided")
     
     result = await db.nonconformities.update_one(
         {"id": nc_id},
