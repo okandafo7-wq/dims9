@@ -497,24 +497,37 @@ async def create_sample_data():
     
     await db.cooperatives.insert_many(cooperatives)
     
-    # Create sample production logs for each cooperative
-    for coop in cooperatives:
+    # Create sample production logs for each cooperative with varying patterns
+    coop_variations = [
+        {"base_prod": 500, "loss_range": (10, 15), "quality_range": (70, 80)},  # Coffee - good quality
+        {"base_prod": 450, "loss_range": (12, 18), "quality_range": (65, 75)},  # Olive Oil - medium
+        {"base_prod": 380, "loss_range": (8, 12), "quality_range": (75, 85)},   # Tea - excellent quality
+        {"base_prod": 420, "loss_range": (15, 20), "quality_range": (60, 70)}   # Quinoa - higher loss
+    ]
+    
+    for coop_idx, coop in enumerate(cooperatives):
+        variation = coop_variations[coop_idx]
         for i in range(10):
             date = datetime.now(timezone.utc) - timedelta(days=i*3)
+            import random
+            loss_pct = random.uniform(*variation["loss_range"])
+            quality_a = random.uniform(*variation["quality_range"])
+            production = variation["base_prod"] + (i * 25)
+            
             log = {
                 "id": str(uuid.uuid4()),
                 "cooperative_id": coop['id'],
                 "date": date.isoformat(),
                 "batch_period": f"Week {10-i}",
-                "total_production": 500 + (i * 30),
-                "grade_a_percent": 75 - (i % 5),
-                "grade_b_percent": 25 + (i % 5),
-                "post_harvest_loss_percent": 12 + (i % 3),
-                "post_harvest_loss_kg": (500 + (i * 30)) * (12 + (i % 3)) / 100,
+                "total_production": production,
+                "grade_a_percent": round(quality_a, 1),
+                "grade_b_percent": round(100 - quality_a, 1),
+                "post_harvest_loss_percent": round(loss_pct, 1),
+                "post_harvest_loss_kg": round(production * loss_pct / 100, 2),
                 "energy_use": ["Low", "Medium", "High"][i % 3],
-                "has_nonconformity": i % 4 == 0,
-                "nonconformity_description": "Quality issues with batch" if i % 4 == 0 else None,
-                "corrective_action": "Improved sorting process" if i % 4 == 0 else None,
+                "has_nonconformity": i % 5 == 0,
+                "nonconformity_description": "Quality issues with batch" if i % 5 == 0 else None,
+                "corrective_action": "Improved sorting process" if i % 5 == 0 else None,
                 "created_at": date.isoformat()
             }
             await db.production_logs.insert_one(log)
