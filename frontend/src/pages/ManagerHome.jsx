@@ -126,7 +126,7 @@ const ManagerHome = ({ user, setUser, api }) => {
         </div>
 
         {/* Action Cards */}
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Card className="border-0 shadow-lg hover:shadow-xl transition-all cursor-pointer" onClick={() => navigate('/data-entry')} data-testid="data-entry-card">
             <div className="h-2 bg-gradient-to-r from-blue-500 to-cyan-500"></div>
             <CardHeader>
@@ -137,6 +137,36 @@ const ManagerHome = ({ user, setUser, api }) => {
                 <div>
                   <CardTitle className="text-xl">Data Entry</CardTitle>
                   <CardDescription className="mt-1">Log production & quality</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+          </Card>
+
+          <Card className="border-0 shadow-lg hover:shadow-xl transition-all cursor-pointer" onClick={() => navigate('/data-entries')} data-testid="data-entries-card">
+            <div className="h-2 bg-gradient-to-r from-indigo-500 to-blue-500"></div>
+            <CardHeader>
+              <div className="flex items-center gap-4">
+                <div className="p-4 rounded-2xl bg-gradient-to-br from-indigo-500 to-blue-500 text-white">
+                  <FileText className="w-8 h-8" />
+                </div>
+                <div>
+                  <CardTitle className="text-xl">View Entries</CardTitle>
+                  <CardDescription className="mt-1">All production logs</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+          </Card>
+
+          <Card className="border-0 shadow-lg hover:shadow-xl transition-all cursor-pointer" onClick={() => navigate('/issues')} data-testid="issues-card">
+            <div className="h-2 bg-gradient-to-r from-red-500 to-orange-500"></div>
+            <CardHeader>
+              <div className="flex items-center gap-4">
+                <div className="p-4 rounded-2xl bg-gradient-to-br from-red-500 to-orange-500 text-white">
+                  <AlertTriangle className="w-8 h-8" />
+                </div>
+                <div>
+                  <CardTitle className="text-xl">Issues</CardTitle>
+                  <CardDescription className="mt-1">Manage nonconformities</CardDescription>
                 </div>
               </div>
             </CardHeader>
