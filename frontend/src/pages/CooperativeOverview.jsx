@@ -90,6 +90,10 @@ const CooperativeOverview = ({ user, setUser, api }) => {
             <Calculator className="w-4 h-4 mr-2" />
             Simulator
           </Button>
+          <Button onClick={() => navigate('/iso-compliance')} variant="outline" data-testid="iso-compliance-button">
+            <Award className="w-4 h-4 mr-2" />
+            ISO Compliance
+          </Button>
         </div>
 
         {/* Cooperatives List */}
