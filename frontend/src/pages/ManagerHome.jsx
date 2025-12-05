@@ -201,6 +201,21 @@ const ManagerHome = ({ user, setUser, api }) => {
               </div>
             </CardHeader>
           </Card>
+
+          <Card className="border-0 shadow-lg hover:shadow-xl transition-all cursor-pointer" onClick={() => navigate('/iso-compliance')} data-testid="iso-compliance-card">
+            <div className="h-2 bg-gradient-to-r from-violet-500 to-purple-500"></div>
+            <CardHeader>
+              <div className="flex items-center gap-4">
+                <div className="p-4 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-500 text-white">
+                  <Award className="w-8 h-8" />
+                </div>
+                <div>
+                  <CardTitle className="text-xl">ISO Compliance</CardTitle>
+                  <CardDescription className="mt-1">Standards & certifications</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+          </Card>
         </div>
       </main>
     </div>
