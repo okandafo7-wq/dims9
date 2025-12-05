@@ -92,10 +92,11 @@ class Nonconformity(BaseModel):
     production_log_id: Optional[str] = None
     date: datetime
     category: str  # "quality", "safety", "environmental"
-    severity: str  # "low", "medium", "high"
+    severity: str  # "low", "medium", "high", "critical"
     description: str
     corrective_action: str
     status: str  # "open", "in_progress", "closed"
+    assigned_to: Optional[str] = None  # user email
     closed_date: Optional[datetime] = None
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
