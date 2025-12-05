@@ -521,7 +521,105 @@ async def create_sample_data():
                 }
                 await db.nonconformities.insert_one(nc)
     
-    return {"message": "MVP sample data initialized successfully", "cooperatives": len(cooperatives)}
+    # Add more standalone nonconformities with realistic issues
+    additional_ncs = [
+        {
+            "id": str(uuid.uuid4()),
+            "cooperative_id": cooperatives[0]['id'],
+            "date": (datetime.now(timezone.utc) - timedelta(days=5)).isoformat(),
+            "category": "quality",
+            "severity": "high",
+            "description": "Cross-contamination detected between organic and conventional products in storage",
+            "corrective_action": "Implemented separate storage zones with clear labeling and staff retraining on segregation protocols",
+            "status": "in_progress",
+            "created_at": (datetime.now(timezone.utc) - timedelta(days=5)).isoformat()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "cooperative_id": cooperatives[0]['id'],
+            "date": (datetime.now(timezone.utc) - timedelta(days=8)).isoformat(),
+            "category": "environmental",
+            "severity": "medium",
+            "description": "Soil erosion observed in cultivation areas due to heavy rainfall and inadequate drainage",
+            "corrective_action": "Installing terracing and drainage systems, planting cover crops to prevent erosion",
+            "status": "open",
+            "created_at": (datetime.now(timezone.utc) - timedelta(days=8)).isoformat()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "cooperative_id": cooperatives[1]['id'],
+            "date": (datetime.now(timezone.utc) - timedelta(days=3)).isoformat(),
+            "category": "safety",
+            "severity": "high",
+            "description": "Emergency exit blocked by equipment in processing facility, violating fire safety regulations",
+            "corrective_action": "Immediately cleared exit route, designated equipment storage area, and posted safety signage",
+            "status": "closed",
+            "closed_date": (datetime.now(timezone.utc) - timedelta(days=1)).isoformat(),
+            "created_at": (datetime.now(timezone.utc) - timedelta(days=3)).isoformat()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "cooperative_id": cooperatives[1]['id'],
+            "date": (datetime.now(timezone.utc) - timedelta(days=12)).isoformat(),
+            "category": "quality",
+            "severity": "medium",
+            "description": "Temperature fluctuations in cold storage exceeding acceptable range for product preservation",
+            "corrective_action": "Repaired cooling system, installed temperature monitoring sensors with alerts",
+            "status": "closed",
+            "closed_date": (datetime.now(timezone.utc) - timedelta(days=7)).isoformat(),
+            "created_at": (datetime.now(timezone.utc) - timedelta(days=12)).isoformat()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "cooperative_id": cooperatives[0]['id'],
+            "date": (datetime.now(timezone.utc) - timedelta(days=2)).isoformat(),
+            "category": "environmental",
+            "severity": "low",
+            "description": "Packaging materials not properly recycled, mixed with general waste",
+            "corrective_action": "Set up dedicated recycling bins with clear instructions, arranged regular collection",
+            "status": "in_progress",
+            "created_at": (datetime.now(timezone.utc) - timedelta(days=2)).isoformat()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "cooperative_id": cooperatives[1]['id'],
+            "date": (datetime.now(timezone.utc) - timedelta(days=6)).isoformat(),
+            "category": "safety",
+            "severity": "medium",
+            "description": "Workers handling chemicals without proper gloves and eye protection",
+            "corrective_action": "Distributed PPE to all workers, conducted safety training, implemented daily safety checks",
+            "status": "closed",
+            "closed_date": (datetime.now(timezone.utc) - timedelta(days=2)).isoformat(),
+            "created_at": (datetime.now(timezone.utc) - timedelta(days=6)).isoformat()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "cooperative_id": cooperatives[0]['id'],
+            "date": (datetime.now(timezone.utc) - timedelta(days=10)).isoformat(),
+            "category": "quality",
+            "severity": "low",
+            "description": "Inconsistent labeling on product packages - missing batch numbers on some units",
+            "corrective_action": "Updated labeling procedures, implemented quality control checklist before packaging",
+            "status": "closed",
+            "closed_date": (datetime.now(timezone.utc) - timedelta(days=5)).isoformat(),
+            "created_at": (datetime.now(timezone.utc) - timedelta(days=10)).isoformat()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "cooperative_id": cooperatives[1]['id'],
+            "date": (datetime.now(timezone.utc) - timedelta(days=1)).isoformat(),
+            "category": "environmental",
+            "severity": "high",
+            "description": "Chemical spillage near water source during processing activities",
+            "corrective_action": "Immediate cleanup, relocated chemical storage, installed spill containment barriers",
+            "status": "open",
+            "created_at": (datetime.now(timezone.utc) - timedelta(days=1)).isoformat()
+        }
+    ]
+    
+    await db.nonconformities.insert_many(additional_ncs)
+    
+    return {"message": "MVP sample data initialized successfully", "cooperatives": len(cooperatives), "nonconformities": len(additional_ncs) + (len(cooperatives) * 3)}
 
 # ============= SETUP =============
 
