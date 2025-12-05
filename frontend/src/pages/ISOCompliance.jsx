@@ -110,12 +110,14 @@ const ISOCompliance = ({ user, api }) => {
       resolved: environmentalResolved,
       description: 'ISO 14001 provides a framework for organizations to protect the environment, respond to changing environmental conditions, and achieve continual improvement of environmental performance.',
       keyRequirements: [
-        'Environmental policy and objectives',
-        'Identification of environmental aspects',
-        'Legal and regulatory compliance',
-        'Resource management and conservation',
-        'Emergency preparedness and response',
-        'Monitoring and measurement of environmental performance'
+        'Environmental aspects (6.1.2) - Identify and assess environmental impacts of activities',
+        'Compliance obligations (6.1.3) - Legal and other environmental requirements',
+        'Environmental objectives (6.2) - Measurable targets for improvement',
+        'Resources (7.1) - Adequate resources for EMS implementation',
+        'Operational control (8.1) - Controls for significant environmental aspects',
+        'Emergency preparedness (8.2) - Response to potential environmental emergencies',
+        'Monitoring and measurement (9.1) - Track environmental performance',
+        'Internal audit (9.2) - Verify EMS conformity and effectiveness'
       ],
       benefits: [
         'Reduced environmental impact',
