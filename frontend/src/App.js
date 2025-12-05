@@ -95,6 +95,14 @@ function App() {
             path="/simulator" 
             element={user ? <WhatIfSimulator user={user} setUser={setUser} api={api} /> : <Navigate to="/login" />} 
           />
+          <Route 
+            path="/digital-twin" 
+            element={user ? <DigitalTwin api={api} /> : <Navigate to="/login" />} 
+          />
+          <Route 
+            path="/esg-reporting" 
+            element={user ? <ESGReporting api={api} /> : <Navigate to="/login" />} 
+          />
           
           <Route path="/" element={<Navigate to={getHomeRoute()} />} />
         </Routes>
