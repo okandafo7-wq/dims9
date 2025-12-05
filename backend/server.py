@@ -459,7 +459,7 @@ async def reinitialize_data(current_user: dict = Depends(get_current_user)):
 
 async def create_sample_data():
     
-    # Create 2 cooperatives
+    # Create 4 cooperatives with diverse data
     cooperatives = [
         {
             "id": str(uuid.uuid4()),
@@ -474,6 +474,22 @@ async def create_sample_data():
             "name": "Mediterranean Olive Oil Cooperative",
             "country": "Tunisia",
             "product": "Olive Oil",
+            "status": "active",
+            "created_at": datetime.now(timezone.utc).isoformat()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "name": "Himalayan Tea Women's Collective",
+            "country": "Nepal",
+            "product": "Tea",
+            "status": "active",
+            "created_at": datetime.now(timezone.utc).isoformat()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "name": "Andean Quinoa Farmers Alliance",
+            "country": "Peru",
+            "product": "Quinoa",
             "status": "active",
             "created_at": datetime.now(timezone.utc).isoformat()
         }
