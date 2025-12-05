@@ -33,9 +33,13 @@ const IssuesManagement = ({ user, setUser, api }) => {
     setLoading(false);
   };
 
-  const handleStatusUpdate = async (ncId, newStatus) => {
+  const handleStatusUpdate = async (ncId, newStatus, assignedTo = null) => {
     try {
-      await api.patch(`/nonconformities/${ncId}?status=${newStatus}`);
+      let url = `/nonconformities/${ncId}?status=${newStatus}`;
+      if (assignedTo !== null) {
+        url += `&assigned_to=${assignedTo}`;
+      }
+      await api.patch(url);
       toast.success('Status updated successfully');
       loadData();
     } catch (error) {
