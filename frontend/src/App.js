@@ -12,6 +12,7 @@ import DigitalTwin from "@/pages/DigitalTwin";
 import ESGReporting from "@/pages/ESGReporting";
 import IssuesManagement from "@/pages/IssuesManagement";
 import DataEntriesView from "@/pages/DataEntriesView";
+import ISOCompliance from "@/pages/ISOCompliance";
 import { Toaster } from "@/components/ui/sonner";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
