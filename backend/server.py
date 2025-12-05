@@ -563,18 +563,35 @@ async def create_sample_data():
                 }
                 await db.nonconformities.insert_one(nc)
     
-    # Add more standalone nonconformities with realistic issues
+    # User emails for assignment
+    user_emails = ["officer@dims.com", "manager@dims.com", "quality.officer@example.com", "safety.manager@example.com"]
+    
+    # Add more standalone nonconformities with realistic ISO-specific issues
     additional_ncs = [
+        # ISO 9001 Quality Issues
         {
             "id": str(uuid.uuid4()),
             "cooperative_id": cooperatives[0]['id'],
             "date": (datetime.now(timezone.utc) - timedelta(days=5)).isoformat(),
             "category": "quality",
-            "severity": "high",
-            "description": "Cross-contamination detected between organic and conventional products in storage",
-            "corrective_action": "Implemented separate storage zones with clear labeling and staff retraining on segregation protocols",
+            "severity": "critical",
+            "description": "ISO 9001.8.5.2 - Traceability failure: Batch identification records missing for 3 shipments, violating customer requirements and recall procedures",
+            "corrective_action": "Implementing automated batch tracking system with QR codes, conducting staff training on documentation procedures, and establishing daily verification checks",
             "status": "in_progress",
+            "assigned_to": user_emails[2],
             "created_at": (datetime.now(timezone.utc) - timedelta(days=5)).isoformat()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "cooperative_id": cooperatives[1]['id'],
+            "date": (datetime.now(timezone.utc) - timedelta(days=3)).isoformat(),
+            "category": "quality",
+            "severity": "high",
+            "description": "ISO 9001.8.6 - Release of non-conforming product: 150kg of product released without final quality inspection approval, customer complaint received",
+            "corrective_action": "Suspended operations pending investigation, implemented mandatory sign-off procedure, installing automated gate system to prevent unauthorized release",
+            "status": "open",
+            "assigned_to": user_emails[0],
+            "created_at": (datetime.now(timezone.utc) - timedelta(days=3)).isoformat()
         },
         {
             "id": str(uuid.uuid4()),
