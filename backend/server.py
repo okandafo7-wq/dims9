@@ -736,7 +736,8 @@ async def create_sample_data():
     
     await db.nonconformities.insert_many(additional_ncs)
     
-    return {"message": "MVP sample data initialized successfully", "cooperatives": len(cooperatives), "nonconformities": len(additional_ncs) + (len(cooperatives) * 3)}
+    total_ncs = len(additional_ncs)
+    return {"message": "MVP sample data initialized successfully", "cooperatives": len(cooperatives), "nonconformities": total_ncs, "users_referenced": len(user_emails)}
 
 # ============= SETUP =============
 
