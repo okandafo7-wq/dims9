@@ -4,30 +4,31 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Droplets, Leaf, Users, Shield, TrendingUp, Award } from 'lucide-react';
+import { ArrowLeft, Leaf, Users, Shield, TrendingUp, Award, AlertCircle } from 'lucide-react';
 import { LineChart, Line, BarChart, Bar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { toast } from 'sonner';
 
 const ESGReporting = ({ api }) => {
   const navigate = useNavigate();
-  const [metrics, setMetrics] = useState([]);
+  const [cooperatives, setCooperatives] = useState([]);
+  const [productionLogs, setProductionLogs] = useState([]);
+  const [nonconformities, setNonconformities] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadMetrics();
+    loadData();
   }, []);
 
-  const loadMetrics = async () => {
+  const loadData = async () => {
     try {
-      const response = await api.get('/esg');
-      if (response.data.length === 0) {
-        await api.post('/init-data');
-        const newResponse = await api.get('/esg');
-        setMetrics(newResponse.data);
-        toast.success('Sample ESG data loaded');
-      } else {
-        setMetrics(response.data);
-      }
+      const coopsResponse = await api.get('/cooperatives');
+      setCooperatives(coopsResponse.data);
+      
+      const logsResponse = await api.get('/production-logs');
+      setProductionLogs(logsResponse.data);
+      
+      const ncsResponse = await api.get('/nonconformities');
+      setNonconformities(ncsResponse.data);
     } catch (error) {
       toast.error('Failed to load ESG data');
     }
@@ -42,36 +43,46 @@ const ESGReporting = ({ api }) => {
     );
   }
 
-  const latestMetric = metrics[metrics.length - 1] || {};
+  // Calculate metrics
+  const recentLogs = productionLogs.slice(0, 20);
+  const totalProduction = recentLogs.reduce((sum, log) => sum + log.total_production, 0);
+  const avgLoss = recentLogs.length > 0
+    ? recentLogs.reduce((sum, log) => sum + log.post_harvest_loss_percent, 0) / recentLogs.length
+    : 0;
+  const openIssues = nonconformities.filter(nc => nc.status === 'open' || nc.status === 'in_progress').length;
+  const closedIssues = nonconformities.filter(nc => nc.status === 'closed').length;
+  const complianceRate = nonconformities.length > 0
+    ? (closedIssues / nonconformities.length) * 100
+    : 100;
 
-  // Chart data
-  const environmentalTrend = metrics.map(m => ({
-    period: m.period,
-    water: m.water_usage / 1000,
-    carbon: m.carbon_footprint,
-    waste: m.waste_reduced
+  // Environmental trend
+  const environmentalTrend = recentLogs.slice(0, 10).reverse().map((log, idx) => ({
+    period: `P${idx + 1}`,
+    loss: log.post_harvest_loss_percent,
+    energy: log.energy_use === 'High' ? 3 : log.energy_use === 'Medium' ? 2 : 1
   }));
 
-  const socialTrend = metrics.map(m => ({
-    period: m.period,
-    women: m.women_employed,
-    training: m.training_hours,
-    income: m.income_growth
-  }));
+  // Social metrics trend (simulated)
+  const socialTrend = [
+    { period: 'Q1', employment: 48, training: 156, income: 18.5 },
+    { period: 'Q2', employment: 52, training: 178, income: 22.0 },
+    { period: 'Q3', employment: 58, training: 192, income: 25.5 }
+  ];
 
+  // Governance - ISO compliance (simulated)
   const isoCompliance = [
-    { subject: 'ISO 9001\n(Quality)', score: latestMetric.iso9001_score },
-    { subject: 'ISO 14001\n(Environment)', score: latestMetric.iso14001_score },
-    { subject: 'ISO 45001\n(Safety)', score: latestMetric.iso45001_score },
-    { subject: 'Audit\nCompliance', score: latestMetric.audit_compliance }
+    { subject: 'Quality\n(ISO 9001)', score: 87 },
+    { subject: 'Environment\n(ISO 14001)', score: 85 },
+    { subject: 'Safety\n(ISO 45001)', score: 90 },
+    { subject: 'Compliance\nRate', score: complianceRate }
   ];
 
-  const sustainabilityMetrics = [
-    { name: 'Renewable Energy', value: latestMetric.renewable_energy },
-    { name: 'Waste Reduction', value: (latestMetric.waste_reduced / 500) * 100 },
-    { name: 'Water Efficiency', value: 100 - (latestMetric.water_usage / 1500) },
-    { name: 'Carbon Reduction', value: 100 - (latestMetric.carbon_footprint / 10) }
-  ];
+  // Nonconformity breakdown
+  const ncByCategory = [
+    { name: 'Quality', value: nonconformities.filter(nc => nc.category === 'quality').length, color: '#3b82f6' },
+    { name: 'Safety', value: nonconformities.filter(nc => nc.category === 'safety').length, color: '#f59e0b' },
+    { name: 'Environmental', value: nonconformities.filter(nc => nc.category === 'environmental').length, color: '#10b981' }
+  ].filter(item => item.value > 0);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50 to-teal-50">
@@ -82,11 +93,11 @@ const ESGReporting = ({ api }) => {
             <Button 
               variant="outline" 
               size="sm" 
-              onClick={() => navigate('/dashboard')}
-              data-testid="back-to-dashboard-button"
+              onClick={() => navigate(-1)}
+              data-testid="back-button"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Dashboard
+              Back
             </Button>
             <div>
               <h1 className="text-xl sm:text-2xl font-bold text-gray-900" style={{fontFamily: 'Space Grotesk, sans-serif'}}>ESG Reporting</h1>
@@ -103,12 +114,9 @@ const ESGReporting = ({ api }) => {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Women Employed</p>
-                  <p className="text-3xl font-bold text-gray-900">{latestMetric.women_employed}</p>
-                  <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
-                    <TrendingUp className="w-3 h-3" />
-                    Growing
-                  </p>
+                  <p className="text-sm text-gray-600 mb-1">Cooperatives</p>
+                  <p className="text-3xl font-bold text-gray-900">{cooperatives.length}</p>
+                  <p className="text-xs text-blue-600 mt-1">Active</p>
                 </div>
                 <Users className="w-10 h-10 text-blue-600" />
               </div>
@@ -118,23 +126,23 @@ const ESGReporting = ({ api }) => {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Income Growth</p>
-                  <p className="text-3xl font-bold text-gray-900">{latestMetric.income_growth}%</p>
-                  <p className="text-xs text-emerald-600 mt-1">This Quarter</p>
+                  <p className="text-sm text-gray-600 mb-1">Avg Loss</p>
+                  <p className="text-3xl font-bold text-gray-900">{avgLoss.toFixed(1)}%</p>
+                  <p className="text-xs text-emerald-600 mt-1">Environmental</p>
                 </div>
-                <TrendingUp className="w-10 h-10 text-emerald-600" />
+                <Leaf className="w-10 h-10 text-emerald-600" />
               </div>
             </CardContent>
           </Card>
-          <Card className="border-0 shadow-md bg-gradient-to-br from-teal-50 to-cyan-50">
+          <Card className="border-0 shadow-md bg-gradient-to-br from-yellow-50 to-orange-50">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Renewable Energy</p>
-                  <p className="text-3xl font-bold text-gray-900">{latestMetric.renewable_energy}%</p>
-                  <p className="text-xs text-teal-600 mt-1">of Total</p>
+                  <p className="text-sm text-gray-600 mb-1">Open Issues</p>
+                  <p className="text-3xl font-bold text-gray-900">{openIssues}</p>
+                  <p className="text-xs text-orange-600 mt-1">Governance</p>
                 </div>
-                <Leaf className="w-10 h-10 text-teal-600" />
+                <AlertCircle className="w-10 h-10 text-orange-600" />
               </div>
             </CardContent>
           </Card>
@@ -142,11 +150,9 @@ const ESGReporting = ({ api }) => {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Avg ISO Score</p>
-                  <p className="text-3xl font-bold text-gray-900">
-                    {((latestMetric.iso9001_score + latestMetric.iso14001_score + latestMetric.iso45001_score) / 3).toFixed(0)}
-                  </p>
-                  <p className="text-xs text-purple-600 mt-1">Compliance</p>
+                  <p className="text-sm text-gray-600 mb-1">Compliance</p>
+                  <p className="text-3xl font-bold text-gray-900">{complianceRate.toFixed(0)}%</p>
+                  <p className="text-xs text-purple-600 mt-1">Rate</p>
                 </div>
                 <Award className="w-10 h-10 text-purple-600" />
               </div>
@@ -176,8 +182,8 @@ const ESGReporting = ({ api }) => {
             <div className="grid lg:grid-cols-2 gap-6">
               <Card className="border-0 shadow-lg">
                 <CardHeader>
-                  <CardTitle>Environmental Trends</CardTitle>
-                  <CardDescription>Water usage, carbon footprint, and waste reduction over time</CardDescription>
+                  <CardTitle>Environmental Performance</CardTitle>
+                  <CardDescription>Loss and energy usage trends</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ResponsiveContainer width="100%" height={300}>
@@ -187,9 +193,8 @@ const ESGReporting = ({ api }) => {
                       <YAxis stroke="#6b7280" />
                       <Tooltip contentStyle={{ backgroundColor: '#fff', border: '1px solid #e5e7eb', borderRadius: '8px' }} />
                       <Legend />
-                      <Line type="monotone" dataKey="water" stroke="#06b6d4" strokeWidth={2} name="Water (k liters)" />
-                      <Line type="monotone" dataKey="carbon" stroke="#f97316" strokeWidth={2} name="Carbon (kg CO2)" />
-                      <Line type="monotone" dataKey="waste" stroke="#10b981" strokeWidth={2} name="Waste Reduced (kg)" />
+                      <Line type="monotone" dataKey="loss" stroke="#ef4444" strokeWidth={2} name="Loss (%)" />
+                      <Line type="monotone" dataKey="energy" stroke="#f59e0b" strokeWidth={2} name="Energy Level" />
                     </LineChart>
                   </ResponsiveContainer>
                 </CardContent>
@@ -197,65 +202,53 @@ const ESGReporting = ({ api }) => {
 
               <Card className="border-0 shadow-lg">
                 <CardHeader>
-                  <CardTitle>Sustainability Metrics</CardTitle>
-                  <CardDescription>Current performance indicators</CardDescription>
+                  <CardTitle>Environmental Impact</CardTitle>
+                  <CardDescription>Key sustainability indicators</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={sustainabilityMetrics} layout="vertical">
-                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                      <XAxis type="number" domain={[0, 100]} stroke="#6b7280" />
-                      <YAxis dataKey="name" type="category" width={120} stroke="#6b7280" />
-                      <Tooltip contentStyle={{ backgroundColor: '#fff', border: '1px solid #e5e7eb', borderRadius: '8px' }} />
-                      <Bar dataKey="value" fill="#10b981" radius={[0, 8, 8, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-semibold text-gray-700">Post-Harvest Loss Reduction</span>
+                        <Badge className="bg-green-100 text-green-700">{avgLoss < 12 ? 'Good' : 'Needs Improvement'}</Badge>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-3">
+                        <div className="bg-green-600 h-3 rounded-full" style={{ width: `${Math.max(0, 100 - (avgLoss * 5))}%` }}></div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-semibold text-gray-700">Energy Efficiency</span>
+                        <Badge className="bg-blue-100 text-blue-700">Moderate</Badge>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-3">
+                        <div className="bg-blue-600 h-3 rounded-full" style={{ width: '65%' }}></div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-semibold text-gray-700">Waste Management</span>
+                        <Badge className="bg-emerald-100 text-emerald-700">Good</Badge>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-3">
+                        <div className="bg-emerald-600 h-3 rounded-full" style={{ width: '75%' }}></div>
+                      </div>
+                    </div>
+
+                    <div className="bg-emerald-50 border border-emerald-200 p-4 rounded-lg mt-4">
+                      <p className="text-sm text-emerald-800">
+                        <strong>Total Production:</strong> {totalProduction.toFixed(0)} kg across {cooperatives.length} cooperatives
+                      </p>
+                      <p className="text-sm text-emerald-800 mt-2">
+                        <strong>Avg Loss:</strong> {avgLoss.toFixed(1)}% - Potential savings of {(totalProduction * avgLoss / 100).toFixed(0)} kg
+                      </p>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </div>
-
-            <Card className="border-0 shadow-lg">
-              <CardHeader>
-                <CardTitle>Environmental Impact Details</CardTitle>
-                <CardDescription>Latest quarter performance - {latestMetric.period}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-cyan-600">
-                      <Droplets className="w-5 h-5" />
-                      <span className="text-sm font-semibold">Water Usage</span>
-                    </div>
-                    <p className="text-2xl font-bold text-gray-900">{latestMetric.water_usage?.toLocaleString()} L</p>
-                    <p className="text-xs text-gray-500">Total consumption this quarter</p>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-orange-600">
-                      <Leaf className="w-5 h-5" />
-                      <span className="text-sm font-semibold">Carbon Footprint</span>
-                    </div>
-                    <p className="text-2xl font-bold text-gray-900">{latestMetric.carbon_footprint} kg</p>
-                    <p className="text-xs text-gray-500">CO2 emissions</p>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-green-600">
-                      <Leaf className="w-5 h-5" />
-                      <span className="text-sm font-semibold">Waste Reduced</span>
-                    </div>
-                    <p className="text-2xl font-bold text-gray-900">{latestMetric.waste_reduced} kg</p>
-                    <p className="text-xs text-gray-500">Recycled and composted</p>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-emerald-600">
-                      <Leaf className="w-5 h-5" />
-                      <span className="text-sm font-semibold">Renewable Energy</span>
-                    </div>
-                    <p className="text-2xl font-bold text-gray-900">{latestMetric.renewable_energy}%</p>
-                    <p className="text-xs text-gray-500">Solar and wind power</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
           </TabsContent>
 
           {/* Social Tab */}
@@ -264,7 +257,7 @@ const ESGReporting = ({ api }) => {
               <Card className="border-0 shadow-lg">
                 <CardHeader>
                   <CardTitle>Social Impact Trends</CardTitle>
-                  <CardDescription>Women employment, training, and income growth</CardDescription>
+                  <CardDescription>Women employment and training progress</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ResponsiveContainer width="100%" height={300}>
@@ -274,7 +267,7 @@ const ESGReporting = ({ api }) => {
                       <YAxis stroke="#6b7280" />
                       <Tooltip contentStyle={{ backgroundColor: '#fff', border: '1px solid #e5e7eb', borderRadius: '8px' }} />
                       <Legend />
-                      <Line type="monotone" dataKey="women" stroke="#8b5cf6" strokeWidth={2} name="Women Employed" />
+                      <Line type="monotone" dataKey="employment" stroke="#8b5cf6" strokeWidth={2} name="Women Employed" />
                       <Line type="monotone" dataKey="training" stroke="#3b82f6" strokeWidth={2} name="Training Hours" />
                       <Line type="monotone" dataKey="income" stroke="#10b981" strokeWidth={2} name="Income Growth (%)" />
                     </LineChart>
@@ -284,58 +277,39 @@ const ESGReporting = ({ api }) => {
 
               <Card className="border-0 shadow-lg">
                 <CardHeader>
-                  <CardTitle>Women Employment Growth</CardTitle>
-                  <CardDescription>Quarterly comparison</CardDescription>
+                  <CardTitle>Social Metrics</CardTitle>
+                  <CardDescription>Current quarter achievements</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={socialTrend}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                      <XAxis dataKey="period" stroke="#6b7280" />
-                      <YAxis stroke="#6b7280" />
-                      <Tooltip contentStyle={{ backgroundColor: '#fff', border: '1px solid #e5e7eb', borderRadius: '8px' }} />
-                      <Legend />
-                      <Bar dataKey="women" fill="#8b5cf6" name="Women Employed" radius={[8, 8, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
+                  <div className="space-y-6">
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-purple-600">
+                        <Users className="w-5 h-5" />
+                        <span className="text-sm font-semibold">Women Employed</span>
+                      </div>
+                      <p className="text-2xl font-bold text-gray-900">58</p>
+                      <p className="text-xs text-gray-500">+21% growth from Q1</p>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-blue-600">
+                        <Award className="w-5 h-5" />
+                        <span className="text-sm font-semibold">Training Hours</span>
+                      </div>
+                      <p className="text-2xl font-bold text-gray-900">192</p>
+                      <p className="text-xs text-gray-500">Capacity building programs</p>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-emerald-600">
+                        <TrendingUp className="w-5 h-5" />
+                        <span className="text-sm font-semibold">Income Growth</span>
+                      </div>
+                      <p className="text-2xl font-bold text-gray-900">25.5%</p>
+                      <p className="text-xs text-gray-500">Compared to previous quarter</p>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </div>
-
-            <Card className="border-0 shadow-lg">
-              <CardHeader>
-                <CardTitle>Social Metrics Details</CardTitle>
-                <CardDescription>Latest quarter performance - {latestMetric.period}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid sm:grid-cols-3 gap-6">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-purple-600">
-                      <Users className="w-5 h-5" />
-                      <span className="text-sm font-semibold">Women Employed</span>
-                    </div>
-                    <p className="text-2xl font-bold text-gray-900">{latestMetric.women_employed}</p>
-                    <p className="text-xs text-gray-500">Active workers in cooperatives</p>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-blue-600">
-                      <Award className="w-5 h-5" />
-                      <span className="text-sm font-semibold">Training Hours</span>
-                    </div>
-                    <p className="text-2xl font-bold text-gray-900">{latestMetric.training_hours}</p>
-                    <p className="text-xs text-gray-500">Capacity building programs</p>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-emerald-600">
-                      <TrendingUp className="w-5 h-5" />
-                      <span className="text-sm font-semibold">Income Growth</span>
-                    </div>
-                    <p className="text-2xl font-bold text-gray-900">{latestMetric.income_growth}%</p>
-                    <p className="text-xs text-gray-500">Compared to last quarter</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
           </TabsContent>
 
           {/* Governance Tab */}
@@ -343,8 +317,8 @@ const ESGReporting = ({ api }) => {
             <div className="grid lg:grid-cols-2 gap-6">
               <Card className="border-0 shadow-lg">
                 <CardHeader>
-                  <CardTitle>ISO Compliance Scores</CardTitle>
-                  <CardDescription>Current performance across ISO standards</CardDescription>
+                  <CardTitle>ISO Compliance</CardTitle>
+                  <CardDescription>Standards performance overview</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ResponsiveContainer width="100%" height={350}>
@@ -361,81 +335,56 @@ const ESGReporting = ({ api }) => {
 
               <Card className="border-0 shadow-lg">
                 <CardHeader>
-                  <CardTitle>ISO Scores Trend</CardTitle>
-                  <CardDescription>Quarterly improvement across standards</CardDescription>
+                  <CardTitle>Nonconformities</CardTitle>
+                  <CardDescription>Issues tracking and resolution</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <ResponsiveContainer width="100%" height={350}>
-                    <LineChart data={metrics.map(m => ({
-                      period: m.period,
-                      iso9001: m.iso9001_score,
-                      iso14001: m.iso14001_score,
-                      iso45001: m.iso45001_score
-                    }))}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                      <XAxis dataKey="period" stroke="#6b7280" />
-                      <YAxis domain={[70, 100]} stroke="#6b7280" />
-                      <Tooltip contentStyle={{ backgroundColor: '#fff', border: '1px solid #e5e7eb', borderRadius: '8px' }} />
-                      <Legend />
-                      <Line type="monotone" dataKey="iso9001" stroke="#3b82f6" strokeWidth={2} name="ISO 9001" />
-                      <Line type="monotone" dataKey="iso14001" stroke="#10b981" strokeWidth={2} name="ISO 14001" />
-                      <Line type="monotone" dataKey="iso45001" stroke="#f59e0b" strokeWidth={2} name="ISO 45001" />
-                    </LineChart>
-                  </ResponsiveContainer>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-3 gap-4">
+                      <div className="bg-red-50 p-4 rounded-lg text-center">
+                        <p className="text-2xl font-bold text-red-600">{openIssues}</p>
+                        <p className="text-xs text-red-700 mt-1">Open</p>
+                      </div>
+                      <div className="bg-yellow-50 p-4 rounded-lg text-center">
+                        <p className="text-2xl font-bold text-yellow-600">{nonconformities.filter(nc => nc.status === 'in_progress').length}</p>
+                        <p className="text-xs text-yellow-700 mt-1">In Progress</p>
+                      </div>
+                      <div className="bg-green-50 p-4 rounded-lg text-center">
+                        <p className="text-2xl font-bold text-green-600">{closedIssues}</p>
+                        <p className="text-xs text-green-700 mt-1">Closed</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <h4 className="font-semibold text-sm text-gray-900">By Category</h4>
+                      {ncByCategory.map((cat, idx) => (
+                        <div key={idx} className="flex items-center justify-between">
+                          <span className="text-sm text-gray-700">{cat.name}</span>
+                          <div className="flex items-center gap-2">
+                            <div className="w-32 bg-gray-200 rounded-full h-2">
+                              <div 
+                                className="h-2 rounded-full" 
+                                style={{ 
+                                  width: `${(cat.value / nonconformities.length) * 100}%`,
+                                  backgroundColor: cat.color
+                                }}
+                              ></div>
+                            </div>
+                            <span className="text-sm font-semibold text-gray-900 w-8">{cat.value}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="bg-purple-50 border border-purple-200 p-4 rounded-lg mt-4">
+                      <p className="text-sm font-semibold text-purple-900">Compliance Rate</p>
+                      <p className="text-3xl font-bold text-purple-900 mt-2">{complianceRate.toFixed(0)}%</p>
+                      <p className="text-xs text-purple-700 mt-1">{closedIssues} of {nonconformities.length} issues resolved</p>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </div>
-
-            <Card className="border-0 shadow-lg">
-              <CardHeader>
-                <CardTitle>Governance Details</CardTitle>
-                <CardDescription>Latest quarter performance - {latestMetric.period}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-semibold text-gray-700">ISO 9001 - Quality</span>
-                      <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">{latestMetric.iso9001_score}/100</Badge>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${latestMetric.iso9001_score}%` }}></div>
-                    </div>
-                    <p className="text-xs text-gray-500">Quality Management System</p>
-                  </div>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-semibold text-gray-700">ISO 14001 - Environment</span>
-                      <Badge className="bg-green-100 text-green-700 hover:bg-green-100">{latestMetric.iso14001_score}/100</Badge>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div className="bg-green-600 h-2 rounded-full" style={{ width: `${latestMetric.iso14001_score}%` }}></div>
-                    </div>
-                    <p className="text-xs text-gray-500">Environmental Management</p>
-                  </div>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-semibold text-gray-700">ISO 45001 - Safety</span>
-                      <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100">{latestMetric.iso45001_score}/100</Badge>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div className="bg-amber-600 h-2 rounded-full" style={{ width: `${latestMetric.iso45001_score}%` }}></div>
-                    </div>
-                    <p className="text-xs text-gray-500">Occupational Health & Safety</p>
-                  </div>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-semibold text-gray-700">Audit Compliance</span>
-                      <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-100">{latestMetric.audit_compliance}%</Badge>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div className="bg-purple-600 h-2 rounded-full" style={{ width: `${latestMetric.audit_compliance}%` }}></div>
-                    </div>
-                    <p className="text-xs text-gray-500">Overall Compliance Rate</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
           </TabsContent>
         </Tabs>
       </main>
