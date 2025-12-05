@@ -73,14 +73,22 @@ const CooperativeOverview = ({ user, setUser, api }) => {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         {/* Quick Actions */}
-        <div className="flex gap-4">
+        <div className="flex flex-wrap gap-4">
           <Button onClick={() => navigate('/dashboard')} data-testid="view-analytics-button">
             <BarChart3 className="w-4 h-4 mr-2" />
-            View Analytics
+            Analytics
+          </Button>
+          <Button onClick={() => navigate('/data-entries')} variant="outline" data-testid="data-entries-button">
+            <FileText className="w-4 h-4 mr-2" />
+            Data Entries
+          </Button>
+          <Button onClick={() => navigate('/issues')} variant="outline" data-testid="issues-button">
+            <AlertOctagon className="w-4 h-4 mr-2" />
+            Issues
           </Button>
           <Button onClick={() => navigate('/simulator')} variant="outline" data-testid="simulator-button">
             <Calculator className="w-4 h-4 mr-2" />
-            What-if Simulator
+            Simulator
           </Button>
         </div>
 
