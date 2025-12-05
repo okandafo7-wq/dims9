@@ -114,6 +114,10 @@ function App() {
             path="/data-entries" 
             element={user ? <DataEntriesView user={user} setUser={setUser} api={api} /> : <Navigate to="/login" />} 
           />
+          <Route 
+            path="/iso-compliance" 
+            element={user ? <ISOCompliance user={user} api={api} /> : <Navigate to="/login" />} 
+          />
           
           <Route path="/" element={<Navigate to={getHomeRoute()} />} />
         </Routes>
