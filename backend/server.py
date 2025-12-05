@@ -476,17 +476,31 @@ async def initialize_mvp_data(current_user: dict = Depends(get_current_user)):
             
             # Create nonconformities for some logs
             if i % 4 == 0:
+                nc_descriptions = [
+                    ("quality", "Quality issues with batch - uneven size distribution", "Improved sorting process and training for workers"),
+                    ("safety", "Worker safety concern - inadequate protective equipment", "Provided new safety gear and conducted safety training"),
+                    ("environmental", "Excessive water usage detected during processing", "Installed water-efficient equipment and monitoring system"),
+                    ("quality", "Contamination risk identified in storage area", "Deep cleaned storage facility and implemented regular inspection"),
+                    ("safety", "Unsafe handling of heavy equipment reported", "Updated safety protocols and conducted equipment training"),
+                    ("environmental", "Waste disposal not following best practices", "Implemented proper waste segregation and disposal system"),
+                    ("quality", "Moisture content exceeds acceptable limits", "Adjusted drying process and added quality checkpoints"),
+                    ("safety", "Inadequate ventilation in processing area", "Installed ventilation fans and air quality monitors"),
+                    ("environmental", "Pesticide residue above threshold levels", "Switched to organic pest control methods"),
+                    ("quality", "Packaging materials not meeting standards", "Sourced new supplier with certified materials")
+                ]
+                
+                nc_info = nc_descriptions[i % len(nc_descriptions)]
                 nc = {
                     "id": str(uuid.uuid4()),
                     "cooperative_id": coop['id'],
                     "production_log_id": log['id'],
                     "date": date.isoformat(),
-                    "category": ["quality", "safety", "environmental"][i % 3],
-                    "severity": ["low", "medium", "high"][i % 3],
-                    "description": "Quality issues with batch",
-                    "corrective_action": "Improved sorting process",
-                    "status": "open" if i < 2 else "closed",
-                    "closed_date": (date + timedelta(days=5)).isoformat() if i >= 2 else None,
+                    "category": nc_info[0],
+                    "severity": ["low", "medium", "high", "medium"][i % 4],
+                    "description": nc_info[1],
+                    "corrective_action": nc_info[2],
+                    "status": "open" if i < 4 else ("in_progress" if i < 6 else "closed"),
+                    "closed_date": (date + timedelta(days=5)).isoformat() if i >= 6 else None,
                     "created_at": date.isoformat()
                 }
                 await db.nonconformities.insert_one(nc)
