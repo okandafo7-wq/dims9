@@ -11,6 +11,7 @@ from typing import List, Optional
 import uuid
 from datetime import datetime, timezone, timedelta
 import jwt
+from jwt.exceptions import ExpiredSignatureError, PyJWTError
 from passlib.context import CryptContext
 
 ROOT_DIR = Path(__file__).parent
