@@ -8,6 +8,8 @@ import ManagerHome from "@/pages/ManagerHome";
 import DataEntry from "@/pages/DataEntry";
 import Dashboard from "@/pages/Dashboard";
 import WhatIfSimulator from "@/pages/WhatIfSimulator";
+import DigitalTwin from "@/pages/DigitalTwin";
+import ESGReporting from "@/pages/ESGReporting";
 import { Toaster } from "@/components/ui/sonner";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
