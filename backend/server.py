@@ -362,6 +362,78 @@ async def create_production_log(log: ProductionLog, current_user: dict = Depends
     
     return log
 
+@api_router.put("/production-logs/{log_id}", response_model=ProductionLog)
+async def update_production_log(
+    log_id: str,
+    log_data: dict,
+    current_user: dict = Depends(get_current_user)
+):
+    """Update a production log"""
+    # Get existing log
+    existing_log = await db.production_logs.find_one({"id": log_id}, {"_id": 0})
+    if not existing_log:
+        raise HTTPException(status_code=404, detail="Production log not found")
+    
+    # Check permissions
+    if current_user['role'] == 'manager':
+        if existing_log['cooperative_id'] != current_user.get('cooperative_id'):
+            raise HTTPException(status_code=403, detail="Cannot update log for other cooperatives")
+    
+    # Update fields
+    update_data = {}
+    allowed_fields = [
+        'total_production', 'grade_a_percent', 'grade_b_percent',
+        'post_harvest_loss_percent', 'post_harvest_loss_kg', 'energy_use',
+        'has_nonconformity', 'nonconformity_description', 'corrective_action'
+    ]
+    
+    for field in allowed_fields:
+        if field in log_data:
+            update_data[field] = log_data[field]
+    
+    if not update_data:
+        raise HTTPException(status_code=400, detail="No update data provided")
+    
+    result = await db.production_logs.update_one(
+        {"id": log_id},
+        {"$set": update_data}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Production log not found or no changes")
+    
+    # Fetch and return updated log
+    updated_log = await db.production_logs.find_one({"id": log_id}, {"_id": 0})
+    if isinstance(updated_log.get('date'), str):
+        updated_log['date'] = datetime.fromisoformat(updated_log['date'])
+    if isinstance(updated_log.get('created_at'), str):
+        updated_log['created_at'] = datetime.fromisoformat(updated_log['created_at'])
+    
+    return ProductionLog(**updated_log)
+
+@api_router.delete("/production-logs/{log_id}")
+async def delete_production_log(
+    log_id: str,
+    current_user: dict = Depends(get_current_user)
+):
+    """Delete a production log"""
+    # Get existing log
+    existing_log = await db.production_logs.find_one({"id": log_id}, {"_id": 0})
+    if not existing_log:
+        raise HTTPException(status_code=404, detail="Production log not found")
+    
+    # Check permissions
+    if current_user['role'] == 'manager':
+        if existing_log['cooperative_id'] != current_user.get('cooperative_id'):
+            raise HTTPException(status_code=403, detail="Cannot delete log for other cooperatives")
+    
+    result = await db.production_logs.delete_one({"id": log_id})
+    
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Production log not found")
+    
+    return {"message": "Production log deleted successfully"}
+
 # ============= NONCONFORMITY ROUTES =============
 
 @api_router.get("/nonconformities", response_model=List[Nonconformity])
