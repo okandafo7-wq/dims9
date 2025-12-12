@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { LogOut, Plus, BarChart3, Calculator, TrendingUp, AlertCircle, Package, FileText, AlertTriangle, Award } from 'lucide-react';
 import { toast } from 'sonner';
 
