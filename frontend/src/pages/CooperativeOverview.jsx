@@ -59,6 +59,12 @@ const CooperativeOverview = ({ user, setUser, api }) => {
               <p className="text-sm font-semibold text-gray-900">{user?.name}</p>
               <p className="text-xs text-gray-500">MOGD Project Officer</p>
             </div>
+            <Avatar className="h-12 w-12 border-2 border-blue-500 shadow-lg">
+              <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=officer&backgroundColor=dbeafe&clothing=blazerShirt&clothingColor=3b82f6&top=longHairStraight&hairColor=4a312c&accessories=prescription02" alt={user?.name} />
+              <AvatarFallback className="bg-blue-100 text-blue-700 font-semibold">
+                {user?.name?.split(' ').map(n => n[0]).join('').toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
             <Button 
               variant="outline" 
               size="sm" 
