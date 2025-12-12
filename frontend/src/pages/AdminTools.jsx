@@ -79,14 +79,32 @@ const AdminTools = ({ user, api }) => {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-        <Alert className="border-orange-200 bg-orange-50">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <Alert className="border-orange-200 bg-orange-50 mb-6">
           <AlertCircle className="h-4 w-4 text-orange-600" />
           <AlertDescription className="text-orange-800">
             <strong>Warning:</strong> These tools should only be used by system administrators. 
             Some actions are irreversible.
           </AlertDescription>
         </Alert>
+
+        <Tabs defaultValue="users" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-2 max-w-md">
+            <TabsTrigger value="users" className="flex items-center gap-2">
+              <Users className="w-4 h-4" />
+              User Management
+            </TabsTrigger>
+            <TabsTrigger value="system" className="flex items-center gap-2">
+              <Settings className="w-4 h-4" />
+              System Tools
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="users\" className="space-y-6">
+            <UserManagement api={api} />
+          </TabsContent>
+
+          <TabsContent value="system" className="space-y-6">
 
         {/* Fix Manager Account */}
         <Card className="border-0 shadow-lg">
