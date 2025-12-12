@@ -160,22 +160,31 @@ const ISOCompliance = ({ user, api }) => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50 to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center gap-4">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={() => navigate(getBackRoute())}
-            data-testid="back-button"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
-          </Button>
-          <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900" style={{fontFamily: 'Space Grotesk, sans-serif'}}>ISO Compliance Center</h1>
-            <p className="text-xs sm:text-sm text-gray-500">Quality, Environment & Safety Standards</p>
+      <header className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => navigate(getBackRoute())}
+              data-testid="back-button"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back
+            </Button>
+            <div>
+              <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent" style={{fontFamily: 'Space Grotesk, sans-serif'}}>ISO Compliance Center</h1>
+              <p className="text-xs sm:text-sm text-gray-500">Standards & certifications management</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Award className="w-8 h-8 text-purple-600" />
+            <div className="text-right hidden sm:block">
+              <p className="text-xs text-gray-500">Overall Score</p>
+              <p className={`text-2xl font-bold ${getScoreColor(overallScore)}`}>{overallScore}%</p>
+            </div>
           </div>
         </div>
       </header>
