@@ -489,6 +489,152 @@ const IssuesManagement = ({ user, setUser, api }) => {
           </CardContent>
         </Card>
       </main>
+
+      {/* Add/Edit Issue Dialog */}
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{isEditing ? 'Edit Issue' : 'Add New Issue'}</DialogTitle>
+            <DialogDescription>
+              {isEditing ? 'Update the details of the issue' : 'Create a new nonconformity issue'}
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {user?.role === 'officer' && !isEditing && (
+              <div className="space-y-2">
+                <Label htmlFor="cooperative_id">Cooperative *</Label>
+                <Select 
+                  value={formData.cooperative_id} 
+                  onValueChange={(value) => setFormData({...formData, cooperative_id: value})}
+                  required
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select cooperative" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {cooperatives.map(coop => (
+                      <SelectItem key={coop.id} value={coop.id}>{coop.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
+            {!isEditing && (
+              <div className="space-y-2">
+                <Label htmlFor="date">Date *</Label>
+                <Input 
+                  id="date"
+                  type="date" 
+                  value={formData.date}
+                  onChange={(e) => setFormData({...formData, date: e.target.value})}
+                  required
+                />
+              </div>
+            )}
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="category">Category *</Label>
+                <Select 
+                  value={formData.category} 
+                  onValueChange={(value) => setFormData({...formData, category: value})}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="quality">Quality</SelectItem>
+                    <SelectItem value="safety">Safety</SelectItem>
+                    <SelectItem value="environmental">Environmental</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="severity">Severity *</Label>
+                <Select 
+                  value={formData.severity} 
+                  onValueChange={(value) => setFormData({...formData, severity: value})}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                    <SelectItem value="critical">Critical</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="description">Description *</Label>
+              <Textarea 
+                id="description"
+                value={formData.description}
+                onChange={(e) => setFormData({...formData, description: e.target.value})}
+                placeholder="Describe the issue..."
+                required
+                rows={3}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="corrective_action">Corrective Action *</Label>
+              <Textarea 
+                id="corrective_action"
+                value={formData.corrective_action}
+                onChange={(e) => setFormData({...formData, corrective_action: e.target.value})}
+                placeholder="Describe the corrective action..."
+                required
+                rows={3}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="status">Status *</Label>
+                <Select 
+                  value={formData.status} 
+                  onValueChange={(value) => setFormData({...formData, status: value})}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="open">Open</SelectItem>
+                    <SelectItem value="in_progress">In Progress</SelectItem>
+                    <SelectItem value="closed">Closed</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="assigned_to">Assigned To (Email)</Label>
+                <Input 
+                  id="assigned_to"
+                  type="email"
+                  value={formData.assigned_to}
+                  onChange={(e) => setFormData({...formData, assigned_to: e.target.value})}
+                  placeholder="user@dims9.com"
+                />
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-4">
+              <Button type="button" variant="outline" onClick={handleCloseDialog}>
+                Cancel
+              </Button>
+              <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700">
+                {isEditing ? 'Update Issue' : 'Create Issue'}
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
