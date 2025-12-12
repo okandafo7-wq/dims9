@@ -1062,6 +1062,119 @@ async def create_sample_data():
             "status": "in_progress",
             "assigned_to": user_emails[2],
             "created_at": (datetime.now(timezone.utc) - timedelta(days=11)).isoformat()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "cooperative_id": cooperatives[0]['id'],
+            "date": (datetime.now(timezone.utc) - timedelta(days=14)).isoformat(),
+            "category": "quality",
+            "severity": "medium",
+            "description": "ISO 9001.8.7 - Control of nonconforming outputs: No formal process for handling customer complaints, 5 complaints pending resolution without documented investigation",
+            "corrective_action": "Establishing customer complaint management system with tracking numbers, assigning complaint coordinator, implementing 48-hour response policy",
+            "status": "open",
+            "assigned_to": user_emails[0],
+            "created_at": (datetime.now(timezone.utc) - timedelta(days=14)).isoformat()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "cooperative_id": cooperatives[1]['id'],
+            "date": (datetime.now(timezone.utc) - timedelta(days=20)).isoformat(),
+            "category": "quality",
+            "severity": "high",
+            "description": "ISO 9001.9.1.2 - Customer satisfaction: Customer survey reveals 40% dissatisfaction with delivery times, impacting repeat business and contract renewals",
+            "corrective_action": "Analyzing logistics process, negotiating with transport provider, implementing order tracking system, establishing regular customer communication protocol",
+            "status": "in_progress",
+            "assigned_to": user_emails[2],
+            "created_at": (datetime.now(timezone.utc) - timedelta(days=20)).isoformat()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "cooperative_id": cooperatives[3]['id'],
+            "date": (datetime.now(timezone.utc) - timedelta(days=18)).isoformat(),
+            "category": "quality",
+            "severity": "low",
+            "description": "ISO 9001.10.2 - Nonconformity and corrective action: Root cause analysis not conducted for recurring quality issues, corrective actions addressing symptoms only",
+            "corrective_action": "Training quality team in 5-Why and fishbone analysis methods, implementing corrective action tracking system with effectiveness verification",
+            "status": "closed",
+            "closed_date": (datetime.now(timezone.utc) - timedelta(days=12)).isoformat(),
+            "assigned_to": user_emails[2],
+            "created_at": (datetime.now(timezone.utc) - timedelta(days=18)).isoformat()
+        },
+        # Additional environmental issues
+        {
+            "id": str(uuid.uuid4()),
+            "cooperative_id": cooperatives[0]['id'],
+            "date": (datetime.now(timezone.utc) - timedelta(days=13)).isoformat(),
+            "category": "environmental",
+            "severity": "medium",
+            "description": "ISO 14001.7.4.1 - Communication: Environmental policy not displayed or communicated to workers, external stakeholders unaware of environmental commitments",
+            "corrective_action": "Printing and posting environmental policy in all work areas, conducting awareness sessions, publishing environmental commitments on website",
+            "status": "closed",
+            "closed_date": (datetime.now(timezone.utc) - timedelta(days=7)).isoformat(),
+            "assigned_to": user_emails[1],
+            "created_at": (datetime.now(timezone.utc) - timedelta(days=13)).isoformat()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "cooperative_id": cooperatives[2]['id'],
+            "date": (datetime.now(timezone.utc) - timedelta(days=16)).isoformat(),
+            "category": "environmental",
+            "severity": "high",
+            "description": "ISO 14001.8.1 - Operational control: Fuel storage tanks showing signs of corrosion, potential soil contamination risk from leakage",
+            "corrective_action": "Tank integrity testing conducted, repairs scheduled, installing leak detection system, implementing monthly visual inspection protocol",
+            "status": "in_progress",
+            "assigned_to": user_emails[0],
+            "created_at": (datetime.now(timezone.utc) - timedelta(days=16)).isoformat()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "cooperative_id": cooperatives[1]['id'],
+            "date": (datetime.now(timezone.utc) - timedelta(days=21)).isoformat(),
+            "category": "environmental",
+            "severity": "medium",
+            "description": "ISO 14001.9.1.1 - Monitoring: Air quality monitoring not conducted despite operations generating dust particles, potential worker and community impact",
+            "corrective_action": "Contracted environmental consultant for baseline air quality assessment, installing dust suppression system, establishing quarterly monitoring schedule",
+            "status": "open",
+            "assigned_to": user_emails[1],
+            "created_at": (datetime.now(timezone.utc) - timedelta(days=21)).isoformat()
+        },
+        # Additional safety issues
+        {
+            "id": str(uuid.uuid4()),
+            "cooperative_id": cooperatives[0]['id'],
+            "date": (datetime.now(timezone.utc) - timedelta(days=17)).isoformat(),
+            "category": "safety",
+            "severity": "high",
+            "description": "ISO 45001.8.1.3 - Management of change: New packaging equipment installed without hazard assessment, workers not trained on new safety procedures",
+            "corrective_action": "Conducting comprehensive risk assessment for new equipment, developing SOPs with safety controls, providing hands-on training before resuming operations",
+            "status": "in_progress",
+            "assigned_to": user_emails[3],
+            "created_at": (datetime.now(timezone.utc) - timedelta(days=17)).isoformat()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "cooperative_id": cooperatives[3]['id'],
+            "date": (datetime.now(timezone.utc) - timedelta(days=22)).isoformat(),
+            "category": "safety",
+            "severity": "low",
+            "description": "ISO 45001.9.1.2 - Monitoring: Noise levels not measured despite loud machinery operation, hearing protection not consistently enforced",
+            "corrective_action": "Conducted noise survey identifying high-risk areas, procuring and distributing hearing protection, establishing hearing conservation program with audiometric testing",
+            "status": "closed",
+            "closed_date": (datetime.now(timezone.utc) - timedelta(days=15)).isoformat(),
+            "assigned_to": user_emails[3],
+            "created_at": (datetime.now(timezone.utc) - timedelta(days=22)).isoformat()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "cooperative_id": cooperatives[2]['id'],
+            "date": (datetime.now(timezone.utc) - timedelta(days=19)).isoformat(),
+            "category": "safety",
+            "severity": "medium",
+            "description": "ISO 45001.7.4 - Communication: Near-miss reporting system not functioning, workers reluctant to report incidents due to fear of reprisal",
+            "corrective_action": "Establishing anonymous reporting system, conducting non-blame culture training for supervisors, implementing incident investigation procedure focusing on system improvement",
+            "status": "in_progress",
+            "assigned_to": user_emails[3],
+            "created_at": (datetime.now(timezone.utc) - timedelta(days=19)).isoformat()
         }
     ]
     
