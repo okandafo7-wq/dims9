@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 
 class DIMSAPITester:
-    def __init__(self, base_url="https://agri-twins.preview.emergentagent.com"):
+    def __init__(self, base_url="https://agriwomen-manage.preview.emergentagent.com"):
         self.base_url = base_url
         self.api_url = f"{base_url}/api"
         self.token = None
