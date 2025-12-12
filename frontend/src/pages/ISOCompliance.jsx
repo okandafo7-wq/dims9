@@ -224,20 +224,70 @@ const ISOCompliance = ({ user, api }) => {
           </CardContent>
         </Card>
 
+        {/* Statistics Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card className="border-0 shadow-lg bg-gradient-to-br from-blue-50 to-blue-100">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-blue-600 font-semibold mb-1">Total Issues</p>
+                  <p className="text-4xl font-bold text-blue-900">{nonconformities.length}</p>
+                </div>
+                <AlertCircle className="w-12 h-12 text-blue-500" />
+              </div>
+              <Progress value={(nonconformities.filter(nc => nc.status === 'closed').length / nonconformities.length) * 100} className="mt-4" />
+              <p className="text-xs text-blue-600 mt-2">{nonconformities.filter(nc => nc.status === 'closed').length} resolved</p>
+            </CardContent>
+          </Card>
+
+          <Card className="border-0 shadow-lg bg-gradient-to-br from-green-50 to-green-100">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-green-600 font-semibold mb-1">Closed</p>
+                  <p className="text-4xl font-bold text-green-900">{nonconformities.filter(nc => nc.status === 'closed').length}</p>
+                </div>
+                <CheckCircle className="w-12 h-12 text-green-500" />
+              </div>
+              <p className="text-xs text-green-600 mt-4">Successfully resolved issues</p>
+            </CardContent>
+          </Card>
+
+          <Card className="border-0 shadow-lg bg-gradient-to-br from-orange-50 to-orange-100">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-orange-600 font-semibold mb-1">In Progress</p>
+                  <p className="text-4xl font-bold text-orange-900">{nonconformities.filter(nc => nc.status === 'in_progress').length}</p>
+                </div>
+                <Target className="w-12 h-12 text-orange-500" />
+              </div>
+              <p className="text-xs text-orange-600 mt-4">Currently being addressed</p>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Compliance Radar */}
-        <Card className="border-0 shadow-lg">
+        <Card className="border-0 shadow-lg bg-gradient-to-br from-white to-purple-50">
           <CardHeader>
-            <CardTitle>Standards Compliance Overview</CardTitle>
-            <CardDescription>Performance across ISO standards</CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-2xl">Standards Compliance Overview</CardTitle>
+                <CardDescription className="text-base mt-1">Performance across ISO standards</CardDescription>
+              </div>
+              <FileCheck className="w-10 h-10 text-purple-600" />
+            </div>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={350}>
+            <ResponsiveContainer width="100%" height={400}>
               <RadarChart data={radarData}>
-                <PolarGrid stroke="#e5e7eb" />
-                <PolarAngleAxis dataKey="standard" tick={{ fill: '#6b7280', fontSize: 12 }} />
-                <PolarRadiusAxis angle={90} domain={[0, 100]} />
-                <Radar name="Score" dataKey="score" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.6} />
-                <Tooltip />
+                <PolarGrid stroke="#e5e7eb" strokeWidth={1.5} />
+                <PolarAngleAxis dataKey="standard" tick={{ fill: '#6b7280', fontSize: 13, fontWeight: 600 }} />
+                <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fill: '#9ca3af' }} />
+                <Radar name="Score" dataKey="score" stroke="#8b5cf6" strokeWidth={3} fill="#8b5cf6" fillOpacity={0.5} />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #e5e7eb', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}
+                />
               </RadarChart>
             </ResponsiveContainer>
           </CardContent>
