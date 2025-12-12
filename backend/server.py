@@ -310,6 +310,103 @@ async def get_nonconformities(
             nc['closed_date'] = datetime.fromisoformat(nc['closed_date'])
     return ncs
 
+class NonconformityCreate(BaseModel):
+    cooperative_id: str
+    date: datetime
+    category: str
+    severity: str
+    description: str
+    corrective_action: str
+    status: str = "open"
+    assigned_to: Optional[str] = None
+
+class NonconformityUpdate(BaseModel):
+    category: Optional[str] = None
+    severity: Optional[str] = None
+    description: Optional[str] = None
+    corrective_action: Optional[str] = None
+    status: Optional[str] = None
+    assigned_to: Optional[str] = None
+
+@api_router.post("/nonconformities", response_model=Nonconformity)
+async def create_nonconformity(
+    nc_data: NonconformityCreate,
+    current_user: dict = Depends(get_current_user)
+):
+    """Create a new nonconformity/issue"""
+    nc = Nonconformity(
+        id=str(uuid.uuid4()),
+        cooperative_id=nc_data.cooperative_id,
+        date=nc_data.date,
+        category=nc_data.category,
+        severity=nc_data.severity,
+        description=nc_data.description,
+        corrective_action=nc_data.corrective_action,
+        status=nc_data.status,
+        assigned_to=nc_data.assigned_to,
+        created_at=datetime.now(timezone.utc)
+    )
+    
+    nc_doc = nc.model_dump()
+    nc_doc['date'] = nc_doc['date'].isoformat()
+    nc_doc['created_at'] = nc_doc['created_at'].isoformat()
+    
+    await db.nonconformities.insert_one(nc_doc)
+    
+    return nc
+
+@api_router.put("/nonconformities/{nc_id}", response_model=Nonconformity)
+async def update_nonconformity_full(
+    nc_id: str,
+    nc_data: NonconformityUpdate,
+    current_user: dict = Depends(get_current_user)
+):
+    """Fully update a nonconformity/issue"""
+    update_data = {}
+    
+    if nc_data.category is not None:
+        update_data["category"] = nc_data.category
+    if nc_data.severity is not None:
+        update_data["severity"] = nc_data.severity
+    if nc_data.description is not None:
+        update_data["description"] = nc_data.description
+    if nc_data.corrective_action is not None:
+        update_data["corrective_action"] = nc_data.corrective_action
+    if nc_data.status is not None:
+        update_data["status"] = nc_data.status
+        if nc_data.status == "closed":
+            update_data["closed_date"] = datetime.now(timezone.utc).isoformat()
+        elif nc_data.status in ["open", "in_progress"]:
+            update_data["closed_date"] = None
+    if nc_data.assigned_to is not None:
+        update_data["assigned_to"] = nc_data.assigned_to
+    
+    if not update_data:
+        raise HTTPException(status_code=400, detail="No update data provided")
+    
+    result = await db.nonconformities.update_one(
+        {"id": nc_id},
+        {"$set": update_data}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Nonconformity not found or no changes")
+    
+    # Fetch and return the updated document
+    updated_nc = await db.nonconformities.find_one({"id": nc_id}, {"_id": 0})
+    if not updated_nc:
+        raise HTTPException(status_code=404, detail="Nonconformity not found")
+    
+    # Convert date fields
+    if isinstance(updated_nc.get('date'), str):
+        updated_nc['date'] = datetime.fromisoformat(updated_nc['date'])
+    if isinstance(updated_nc.get('created_at'), str):
+        updated_nc['created_at'] = datetime.fromisoformat(updated_nc['created_at'])
+    if updated_nc.get('closed_date') and isinstance(updated_nc['closed_date'], str):
+        updated_nc['closed_date'] = datetime.fromisoformat(updated_nc['closed_date'])
+    
+    return Nonconformity(**updated_nc)
+
 @api_router.patch("/nonconformities/{nc_id}")
 async def update_nonconformity(
     nc_id: str,
