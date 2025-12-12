@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { LogOut, TrendingUp, TrendingDown, AlertTriangle, BarChart3, Calculator, FileText, AlertOctagon, Award } from 'lucide-react';
 import { toast } from 'sonner';
 
