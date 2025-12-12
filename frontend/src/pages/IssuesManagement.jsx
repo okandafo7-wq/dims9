@@ -19,6 +19,19 @@ const IssuesManagement = ({ user, setUser, api }) => {
   const [loading, setLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterCooperative, setFilterCooperative] = useState('all');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentIssue, setCurrentIssue] = useState(null);
+  const [formData, setFormData] = useState({
+    cooperative_id: '',
+    date: new Date().toISOString().split('T')[0],
+    category: 'quality',
+    severity: 'medium',
+    description: '',
+    corrective_action: '',
+    status: 'open',
+    assigned_to: ''
+  });
 
   useEffect(() => {
     loadData();
