@@ -39,6 +39,53 @@ const DataEntriesView = ({ user, setUser, api }) => {
     setLoading(false);
   };
 
+  const handleOpenDialog = (log) => {
+    setCurrentLog(log);
+    setFormData({
+      total_production: log.total_production,
+      grade_a_percent: log.grade_a_percent,
+      grade_b_percent: log.grade_b_percent,
+      post_harvest_loss_percent: log.post_harvest_loss_percent,
+      post_harvest_loss_kg: log.post_harvest_loss_kg,
+      energy_use: log.energy_use,
+      has_nonconformity: log.has_nonconformity,
+      nonconformity_description: log.nonconformity_description || '',
+      corrective_action: log.corrective_action || ''
+    });
+    setIsDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+    setCurrentLog(null);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await api.put(`/production-logs/${currentLog.id}`, formData);
+      toast.success('Entry updated successfully');
+      handleCloseDialog();
+      loadData();
+    } catch (error) {
+      toast.error('Failed to update entry');
+    }
+  };
+
+  const handleDelete = async (logId) => {
+    if (!window.confirm('Are you sure you want to delete this entry?')) {
+      return;
+    }
+    
+    try {
+      await api.delete(`/production-logs/${logId}`);
+      toast.success('Entry deleted successfully');
+      loadData();
+    } catch (error) {
+      toast.error('Failed to delete entry');
+    }
+  };
+
   const getBackRoute = () => {
     return user?.role === 'officer' ? '/overview' : '/home';
   };
