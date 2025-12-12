@@ -119,6 +119,10 @@ function App() {
             path="/iso-compliance" 
             element={user ? <ISOCompliance user={user} api={api} /> : <Navigate to="/login" />} 
           />
+          <Route 
+            path="/admin-tools" 
+            element={user?.role === "officer" ? <AdminTools user={user} api={api} /> : <Navigate to="/login" />} 
+          />
           
           <Route path="/" element={<Navigate to={getHomeRoute()} />} />
         </Routes>
