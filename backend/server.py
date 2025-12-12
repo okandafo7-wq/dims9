@@ -1175,6 +1175,116 @@ async def create_sample_data():
             "status": "in_progress",
             "assigned_to": user_emails[3],
             "created_at": (datetime.now(timezone.utc) - timedelta(days=19)).isoformat()
+        },
+        # Additional issues for Green Valley Coffee Cooperative (cooperatives[0])
+        {
+            "id": str(uuid.uuid4()),
+            "cooperative_id": cooperatives[0]['id'],
+            "date": (datetime.now(timezone.utc) - timedelta(days=25)).isoformat(),
+            "category": "quality",
+            "severity": "critical",
+            "description": "ISO 9001.8.5.1 - Control of production: Coffee bean sorting process not standardized, leading to inconsistent quality grades and customer complaints about mixed batches",
+            "corrective_action": "Implementing visual sorting standards with reference samples, providing intensive training to sorters, installing automated grading equipment, conducting daily quality audits",
+            "status": "open",
+            "assigned_to": user_emails[2],
+            "created_at": (datetime.now(timezone.utc) - timedelta(days=25)).isoformat()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "cooperative_id": cooperatives[0]['id'],
+            "date": (datetime.now(timezone.utc) - timedelta(days=28)).isoformat(),
+            "category": "quality",
+            "severity": "high",
+            "description": "ISO 9001.8.3.5 - Design and development outputs: Packaging design does not include required allergen information and country of origin labeling per import regulations",
+            "corrective_action": "Engaging regulatory compliance consultant, redesigning packaging labels with all required information, obtaining certification body approval before release",
+            "status": "in_progress",
+            "assigned_to": user_emails[0],
+            "created_at": (datetime.now(timezone.utc) - timedelta(days=28)).isoformat()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "cooperative_id": cooperatives[0]['id'],
+            "date": (datetime.now(timezone.utc) - timedelta(days=30)).isoformat(),
+            "category": "quality",
+            "severity": "medium",
+            "description": "ISO 9001.7.1.6 - Organizational knowledge: Experienced quality inspectors retiring, critical quality assessment knowledge not documented or transferred",
+            "corrective_action": "Creating detailed quality inspection SOPs with photo guides, conducting knowledge transfer sessions, implementing mentorship program, recording video tutorials",
+            "status": "in_progress",
+            "assigned_to": user_emails[2],
+            "created_at": (datetime.now(timezone.utc) - timedelta(days=30)).isoformat()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "cooperative_id": cooperatives[0]['id'],
+            "date": (datetime.now(timezone.utc) - timedelta(days=32)).isoformat(),
+            "category": "environmental",
+            "severity": "high",
+            "description": "ISO 14001.6.2.1 - Environmental objectives: Water usage targets not set despite significant consumption during coffee processing, no conservation program in place",
+            "corrective_action": "Conducting water audit to establish baseline, setting 20% reduction target, installing water recycling system, implementing water-efficient processing techniques",
+            "status": "open",
+            "assigned_to": user_emails[1],
+            "created_at": (datetime.now(timezone.utc) - timedelta(days=32)).isoformat()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "cooperative_id": cooperatives[0]['id'],
+            "date": (datetime.now(timezone.utc) - timedelta(days=35)).isoformat(),
+            "category": "environmental",
+            "severity": "medium",
+            "description": "ISO 14001.8.1 - Operational control: Coffee pulp waste disposal uncontrolled, large volumes sent to landfill instead of composting or energy recovery",
+            "corrective_action": "Partnering with local composting facility, installing on-site composting system, exploring biogas generation option, training staff on organic waste management",
+            "status": "in_progress",
+            "assigned_to": user_emails[1],
+            "created_at": (datetime.now(timezone.utc) - timedelta(days=35)).isoformat()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "cooperative_id": cooperatives[0]['id'],
+            "date": (datetime.now(timezone.utc) - timedelta(days=38)).isoformat(),
+            "category": "environmental",
+            "severity": "critical",
+            "description": "ISO 14001.6.1.3 - Compliance obligations: Wastewater from coffee processing exceeding discharge limits for COD and BOD, violating local environmental permits",
+            "corrective_action": "Emergency installation of treatment system, halting discharge until within limits, applying for temporary storage permit, engaging environmental engineer for permanent solution",
+            "status": "open",
+            "assigned_to": user_emails[0],
+            "created_at": (datetime.now(timezone.utc) - timedelta(days=38)).isoformat()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "cooperative_id": cooperatives[0]['id'],
+            "date": (datetime.now(timezone.utc) - timedelta(days=40)).isoformat(),
+            "category": "safety",
+            "severity": "high",
+            "description": "ISO 45001.8.1.1 - Hazard identification: Slippery floors in wet processing area causing multiple worker falls, no anti-slip measures implemented",
+            "corrective_action": "Installing anti-slip flooring in all wet areas, providing slip-resistant footwear to workers, improving drainage system, placing warning signs and handrails",
+            "status": "in_progress",
+            "assigned_to": user_emails[3],
+            "created_at": (datetime.now(timezone.utc) - timedelta(days=40)).isoformat()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "cooperative_id": cooperatives[0]['id'],
+            "date": (datetime.now(timezone.utc) - timedelta(days=42)).isoformat(),
+            "category": "safety",
+            "severity": "medium",
+            "description": "ISO 45001.7.5 - Documented information: First aid training records incomplete, unable to verify competency of designated first aiders",
+            "corrective_action": "Conducting full first aid training for all designated responders, implementing training record system with certification tracking, scheduling biannual refresher courses",
+            "status": "closed",
+            "closed_date": (datetime.now(timezone.utc) - timedelta(days=36)).isoformat(),
+            "assigned_to": user_emails[3],
+            "created_at": (datetime.now(timezone.utc) - timedelta(days=42)).isoformat()
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "cooperative_id": cooperatives[0]['id'],
+            "date": (datetime.now(timezone.utc) - timedelta(days=45)).isoformat(),
+            "category": "safety",
+            "severity": "high",
+            "description": "ISO 45001.8.1.4.2 - Procurement: New roasting equipment procured without safety specifications review, missing critical safety interlocks",
+            "corrective_action": "Retrofitting safety interlocks on equipment, updating procurement procedure to include safety requirements review, establishing pre-purchase safety assessment",
+            "status": "in_progress",
+            "assigned_to": user_emails[3],
+            "created_at": (datetime.now(timezone.utc) - timedelta(days=45)).isoformat()
         }
     ]
     
