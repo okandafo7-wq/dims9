@@ -178,35 +178,37 @@ const AdminTools = ({ user, api }) => {
           </Card>
         )}
 
-        {/* Instructions */}
-        <Card className="border-0 shadow-lg">
-          <CardHeader>
-            <CardTitle>Troubleshooting Guide</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3 text-sm">
-            <div>
-              <strong className="text-gray-900">Manager shows "Failed to load data":</strong>
-              <p className="text-gray-600 mt-1">
-                Click "Fix Manager Cooperative" button above. This updates the manager's cooperative 
-                assignment to a valid cooperative.
-              </p>
-            </div>
-            <div>
-              <strong className="text-gray-900">Need fresh sample data:</strong>
-              <p className="text-gray-600 mt-1">
-                Click "Reinitialize Data" button. This will create 4 cooperatives, 40 production logs, 
-                and 25 realistic nonconformities.
-              </p>
-            </div>
-            <div>
-              <strong className="text-gray-900">After reinitialization:</strong>
-              <p className="text-gray-600 mt-1">
-                The manager account is automatically updated to the first cooperative. No additional 
-                action needed.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+            {/* Instructions */}
+            <Card className="border-0 shadow-lg">
+              <CardHeader>
+                <CardTitle>Troubleshooting Guide</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm">
+                <div>
+                  <strong className="text-gray-900">Manager shows "Failed to load data":</strong>
+                  <p className="text-gray-600 mt-1">
+                    Click "Fix Manager Cooperative" button above. This updates the manager's cooperative 
+                    assignment to a valid cooperative.
+                  </p>
+                </div>
+                <div>
+                  <strong className="text-gray-900">Need fresh sample data:</strong>
+                  <p className="text-gray-600 mt-1">
+                    Click "Reinitialize Data" button. This will create 4 cooperatives, 40 production logs, 
+                    and 25 realistic nonconformities.
+                  </p>
+                </div>
+                <div>
+                  <strong className="text-gray-900">After reinitialization:</strong>
+                  <p className="text-gray-600 mt-1">
+                    The manager account is automatically updated to the first cooperative. No additional 
+                    action needed.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </main>
     </div>
   );
