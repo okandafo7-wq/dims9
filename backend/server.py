@@ -199,6 +199,85 @@ async def login(credentials: UserLogin):
         user=user_obj
     )
 
+# ============= USER MANAGEMENT ROUTES =============
+
+@api_router.get("/users", response_model=List[User])
+async def get_users(current_user: dict = Depends(get_current_user)):
+    """Get all users (officer only)"""
+    if current_user['role'] != 'officer':
+        raise HTTPException(status_code=403, detail="Only officers can view all users")
+    
+    users = await db.users.find({}, {"_id": 0, "password": 0, "hashed_password": 0}).to_list(1000)
+    for user in users:
+        if isinstance(user.get('timestamp'), str):
+            user['created_at'] = datetime.fromisoformat(user['timestamp'])
+        elif not user.get('created_at'):
+            user['created_at'] = datetime.now(timezone.utc)
+    return users
+
+@api_router.put("/users/{user_id}", response_model=User)
+async def update_user(
+    user_id: str,
+    user_data: dict,
+    current_user: dict = Depends(get_current_user)
+):
+    """Update a user (officer only)"""
+    if current_user['role'] != 'officer':
+        raise HTTPException(status_code=403, detail="Only officers can update users")
+    
+    update_data = {}
+    if 'name' in user_data:
+        update_data['name'] = user_data['name']
+    if 'email' in user_data:
+        # Check if email already exists for a different user
+        existing = await db.users.find_one({"email": user_data['email'], "id": {"$ne": user_id}})
+        if existing:
+            raise HTTPException(status_code=400, detail="Email already in use")
+        update_data['email'] = user_data['email']
+    if 'role' in user_data:
+        update_data['role'] = user_data['role']
+    if 'cooperative_id' in user_data:
+        update_data['cooperative_id'] = user_data['cooperative_id'] if user_data['cooperative_id'] else None
+    if 'password' in user_data and user_data['password']:
+        update_data['password'] = hash_password(user_data['password'])
+    
+    if not update_data:
+        raise HTTPException(status_code=400, detail="No update data provided")
+    
+    result = await db.users.update_one(
+        {"id": user_id},
+        {"$set": update_data}
+    )
+    
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Fetch and return updated user
+    updated_user = await db.users.find_one({"id": user_id}, {"_id": 0, "password": 0, "hashed_password": 0})
+    if isinstance(updated_user.get('timestamp'), str):
+        updated_user['created_at'] = datetime.fromisoformat(updated_user['timestamp'])
+    return User(**updated_user)
+
+@api_router.delete("/users/{user_id}")
+async def delete_user(
+    user_id: str,
+    current_user: dict = Depends(get_current_user)
+):
+    """Delete a user (officer only)"""
+    if current_user['role'] != 'officer':
+        raise HTTPException(status_code=403, detail="Only officers can delete users")
+    
+    # Prevent deleting self
+    if user_id == current_user['id']:
+        raise HTTPException(status_code=400, detail="Cannot delete your own account")
+    
+    result = await db.users.delete_one({"id": user_id})
+    
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    return {"message": "User deleted successfully"}
+
 @api_router.get("/auth/me", response_model=User)
 async def get_me(current_user: dict = Depends(get_current_user)):
     if isinstance(current_user.get('timestamp'), str):
