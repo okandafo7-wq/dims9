@@ -578,6 +578,65 @@ async def fix_manager_cooperative(current_user: dict = Depends(get_current_user)
         "updated": result.modified_count > 0
     }
 
+@api_router.post("/update-manager-cooperative")
+async def update_manager_cooperative(
+    cooperative_id: str,
+    current_user: dict = Depends(get_current_user)
+):
+    """Update manager's cooperative_id to a specific cooperative"""
+    if current_user['role'] != 'officer':
+        raise HTTPException(status_code=403, detail="Only officers can update manager cooperative")
+    
+    # Verify cooperative exists
+    coop = await db.cooperatives.find_one({"id": cooperative_id}, {"_id": 0})
+    if not coop:
+        raise HTTPException(status_code=404, detail="Cooperative not found")
+    
+    # Update manager's cooperative_id (supports both @dims.com and @dims9.com)
+    result = await db.users.update_one(
+        {"email": {"$in": ["manager@dims.com", "manager@dims9.com"]}},
+        {"$set": {"cooperative_id": cooperative_id}}
+    )
+    
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Manager not found")
+    
+    return {
+        "message": "Manager cooperative updated successfully",
+        "cooperative_id": cooperative_id,
+        "cooperative_name": coop['name']
+    }
+
+@api_router.post("/update-email-domains")
+async def update_email_domains(
+    old_domain: str,
+    new_domain: str,
+    current_user: dict = Depends(get_current_user)
+):
+    """Update all user email domains"""
+    if current_user['role'] != 'officer':
+        raise HTTPException(status_code=403, detail="Only officers can update email domains")
+    
+    # Get all users
+    users = await db.users.find({}, {"_id": 0}).to_list(1000)
+    
+    updated_count = 0
+    for user in users:
+        if user['email'].endswith(f"@{old_domain}"):
+            new_email = user['email'].replace(f"@{old_domain}", f"@{new_domain}")
+            await db.users.update_one(
+                {"id": user['id']},
+                {"$set": {"email": new_email}}
+            )
+            updated_count += 1
+    
+    return {
+        "message": f"Updated {updated_count} user email domains",
+        "old_domain": old_domain,
+        "new_domain": new_domain,
+        "updated_count": updated_count
+    }
+
 async def create_sample_data():
     
     # Create 4 cooperatives with diverse data
