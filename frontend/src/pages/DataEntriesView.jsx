@@ -18,6 +18,9 @@ const DataEntriesView = ({ user, setUser, api }) => {
   const [cooperatives, setCooperatives] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filterCooperative, setFilterCooperative] = useState('all');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [currentLog, setCurrentLog] = useState(null);
+  const [formData, setFormData] = useState({});!
 
   useEffect(() => {
     loadData();
