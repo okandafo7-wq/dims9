@@ -55,6 +55,12 @@ const ManagerHome = ({ user, setUser, api }) => {
               <p className="text-sm font-semibold text-gray-900">{user?.name}</p>
               <p className="text-xs text-gray-500">Cooperative Manager</p>
             </div>
+            <Avatar className="h-12 w-12 border-2 border-emerald-500 shadow-lg">
+              <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=manager&backgroundColor=d1fae5&clothing=blazerSweater&clothingColor=10b981" alt={user?.name} />
+              <AvatarFallback className="bg-emerald-100 text-emerald-700 font-semibold">
+                {user?.name?.split(' ').map(n => n[0]).join('').toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
             <Button 
               variant="outline" 
               size="sm" 
