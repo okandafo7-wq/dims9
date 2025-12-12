@@ -317,6 +317,28 @@ const DataEntriesView = ({ user, setUser, api }) => {
                               )}
                             </div>
                           )}
+
+                          {user?.role === 'manager' && (
+                            <div className="flex gap-2 pt-2">
+                              <Button 
+                                size="sm" 
+                                variant="outline"
+                                onClick={() => handleOpenDialog(log)}
+                              >
+                                <Edit className="w-4 h-4 mr-1" />
+                                Edit
+                              </Button>
+                              <Button 
+                                size="sm" 
+                                variant="outline"
+                                className="text-red-600 hover:bg-red-50"
+                                onClick={() => handleDelete(log.id)}
+                              >
+                                <Trash2 className="w-4 h-4 mr-1" />
+                                Delete
+                              </Button>
+                            </div>
+                          )}
                         </div>
                       </CardContent>
                     </Card>
@@ -327,6 +349,129 @@ const DataEntriesView = ({ user, setUser, api }) => {
           </CardContent>
         </Card>
       </main>
+
+      {/* Edit Entry Dialog */}
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit Production Entry</DialogTitle>
+            <DialogDescription>Update the production log details</DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="total_production">Total Production (kg) *</Label>
+                <Input 
+                  id="total_production"
+                  type="number"
+                  step="0.01"
+                  value={formData.total_production}
+                  onChange={(e) => setFormData({...formData, total_production: parseFloat(e.target.value)})}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="energy_use">Energy Use *</Label>
+                <Select 
+                  value={formData.energy_use} 
+                  onValueChange={(value) => setFormData({...formData, energy_use: value})}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Low">Low</SelectItem>
+                    <SelectItem value="Medium">Medium</SelectItem>
+                    <SelectItem value="High">High</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="grade_a">Grade A (%)</Label>
+                <Input 
+                  id="grade_a"
+                  type="number"
+                  step="0.01"
+                  value={formData.grade_a_percent}
+                  onChange={(e) => setFormData({...formData, grade_a_percent: parseFloat(e.target.value)})}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="grade_b">Grade B (%)</Label>
+                <Input 
+                  id="grade_b"
+                  type="number"
+                  step="0.01"
+                  value={formData.grade_b_percent}
+                  onChange={(e) => setFormData({...formData, grade_b_percent: parseFloat(e.target.value)})}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="loss_percent">Post-Harvest Loss (%)</Label>
+                <Input 
+                  id="loss_percent"
+                  type="number"
+                  step="0.01"
+                  value={formData.post_harvest_loss_percent}
+                  onChange={(e) => setFormData({...formData, post_harvest_loss_percent: parseFloat(e.target.value)})}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="loss_kg">Post-Harvest Loss (kg)</Label>
+                <Input 
+                  id="loss_kg"
+                  type="number"
+                  step="0.01"
+                  value={formData.post_harvest_loss_kg}
+                  onChange={(e) => setFormData({...formData, post_harvest_loss_kg: parseFloat(e.target.value)})}
+                />
+              </div>
+            </div>
+
+            {formData.has_nonconformity && (
+              <>
+                <div className="space-y-2">
+                  <Label htmlFor="nonconformity_desc">Issue Description</Label>
+                  <Textarea 
+                    id="nonconformity_desc"
+                    value={formData.nonconformity_description}
+                    onChange={(e) => setFormData({...formData, nonconformity_description: e.target.value})}
+                    rows={2}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="corrective_action">Corrective Action</Label>
+                  <Textarea 
+                    id="corrective_action"
+                    value={formData.corrective_action}
+                    onChange={(e) => setFormData({...formData, corrective_action: e.target.value})}
+                    rows={2}
+                  />
+                </div>
+              </>
+            )}
+
+            <div className="flex justify-end gap-2 pt-4">
+              <Button type="button" variant="outline" onClick={handleCloseDialog}>
+                Cancel
+              </Button>
+              <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700">
+                Update Entry
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
