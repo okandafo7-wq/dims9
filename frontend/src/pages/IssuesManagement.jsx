@@ -64,6 +64,73 @@ const IssuesManagement = ({ user, setUser, api }) => {
     }
   };
 
+  const handleOpenDialog = (issue = null) => {
+    if (issue) {
+      setIsEditing(true);
+      setCurrentIssue(issue);
+      setFormData({
+        cooperative_id: issue.cooperative_id,
+        date: new Date(issue.date).toISOString().split('T')[0],
+        category: issue.category,
+        severity: issue.severity,
+        description: issue.description,
+        corrective_action: issue.corrective_action,
+        status: issue.status,
+        assigned_to: issue.assigned_to || ''
+      });
+    } else {
+      setIsEditing(false);
+      setCurrentIssue(null);
+      setFormData({
+        cooperative_id: user?.role === 'manager' ? user.cooperative_id : '',
+        date: new Date().toISOString().split('T')[0],
+        category: 'quality',
+        severity: 'medium',
+        description: '',
+        corrective_action: '',
+        status: 'open',
+        assigned_to: ''
+      });
+    }
+    setIsDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+    setIsEditing(false);
+    setCurrentIssue(null);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (isEditing && currentIssue) {
+        // Update existing issue
+        await api.put(`/nonconformities/${currentIssue.id}`, {
+          category: formData.category,
+          severity: formData.severity,
+          description: formData.description,
+          corrective_action: formData.corrective_action,
+          status: formData.status,
+          assigned_to: formData.assigned_to || null
+        });
+        toast.success('Issue updated successfully');
+      } else {
+        // Create new issue
+        await api.post('/nonconformities', {
+          ...formData,
+          date: new Date(formData.date).toISOString(),
+          assigned_to: formData.assigned_to || null
+        });
+        toast.success('Issue created successfully');
+      }
+      handleCloseDialog();
+      loadData();
+    } catch (error) {
+      toast.error(isEditing ? 'Failed to update issue' : 'Failed to create issue');
+    }
+  };
+
   const getBackRoute = () => {
     return user?.role === 'officer' ? '/overview' : '/home';
   };
