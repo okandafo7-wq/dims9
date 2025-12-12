@@ -457,6 +457,30 @@ async def reinitialize_data(current_user: dict = Depends(get_current_user)):
     
     return await create_sample_data()
 
+@api_router.post("/fix-manager-cooperative")
+async def fix_manager_cooperative(current_user: dict = Depends(get_current_user)):
+    """Fix manager's cooperative_id to point to the first cooperative"""
+    if current_user['role'] != 'officer':
+        raise HTTPException(status_code=403, detail="Only officers can run this fix")
+    
+    # Get first cooperative
+    first_coop = await db.cooperatives.find_one({}, {"_id": 0})
+    if not first_coop:
+        raise HTTPException(status_code=404, detail="No cooperatives found")
+    
+    # Update manager's cooperative_id
+    result = await db.users.update_one(
+        {"email": "manager@dims.com"},
+        {"$set": {"cooperative_id": first_coop['id']}}
+    )
+    
+    return {
+        "message": "Manager cooperative_id fixed",
+        "cooperative_id": first_coop['id'],
+        "cooperative_name": first_coop['name'],
+        "updated": result.modified_count > 0
+    }
+
 async def create_sample_data():
     
     # Create 4 cooperatives with diverse data
