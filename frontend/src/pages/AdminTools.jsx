@@ -100,7 +100,7 @@ const AdminTools = ({ user, api }) => {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="users\" className="space-y-6">
+          <TabsContent value="users" className="space-y-6">
             <UserManagement api={api} />
           </TabsContent>
 
