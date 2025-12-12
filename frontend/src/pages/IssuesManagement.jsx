@@ -438,7 +438,16 @@ const IssuesManagement = ({ user, setUser, api }) => {
                             </div>
                           )}
 
-                          <div className="flex gap-2">
+                          <div className="flex gap-2 flex-wrap">
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => handleOpenDialog(nc)}
+                              data-testid={`edit-${nc.id}`}
+                            >
+                              <Edit className="w-4 h-4 mr-1" />
+                              Edit
+                            </Button>
                             {nc.status === 'open' && (
                               <Button 
                                 size="sm" 
