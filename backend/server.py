@@ -736,8 +736,20 @@ async def create_sample_data():
     
     await db.nonconformities.insert_many(additional_ncs)
     
+    # Update manager user's cooperative_id to the first cooperative
+    manager_update = await db.users.update_one(
+        {"email": "manager@dims.com"},
+        {"$set": {"cooperative_id": cooperatives[0]['id']}}
+    )
+    
     total_ncs = len(additional_ncs)
-    return {"message": "MVP sample data initialized successfully", "cooperatives": len(cooperatives), "nonconformities": total_ncs, "users_referenced": len(user_emails)}
+    return {
+        "message": "MVP sample data initialized successfully", 
+        "cooperatives": len(cooperatives), 
+        "nonconformities": total_ncs, 
+        "users_referenced": len(user_emails),
+        "manager_updated": manager_update.modified_count > 0
+    }
 
 # ============= SETUP =============
 
