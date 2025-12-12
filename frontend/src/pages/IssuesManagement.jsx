@@ -195,20 +195,29 @@ const IssuesManagement = ({ user, setUser, api }) => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-red-50 to-orange-50">
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center gap-4">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={() => navigate(getBackRoute())}
-            data-testid="back-button"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
-          </Button>
-          <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900" style={{fontFamily: 'Space Grotesk, sans-serif'}}>Issues Management</h1>
-            <p className="text-xs sm:text-sm text-gray-500">Nonconformities tracking & analysis</p>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => navigate(getBackRoute())}
+              data-testid="back-button"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back
+            </Button>
+            <div>
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900" style={{fontFamily: 'Space Grotesk, sans-serif'}}>Issues Management</h1>
+              <p className="text-xs sm:text-sm text-gray-500">Nonconformities tracking & analysis</p>
+            </div>
           </div>
+          <Button 
+            onClick={() => handleOpenDialog()}
+            className="bg-emerald-600 hover:bg-emerald-700"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add Issue
+          </Button>
         </div>
       </header>
 
