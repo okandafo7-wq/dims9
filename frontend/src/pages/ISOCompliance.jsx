@@ -191,16 +191,34 @@ const ISOCompliance = ({ user, api }) => {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         {/* Overall Score */}
-        <Card className="border-0 shadow-xl bg-gradient-to-br from-purple-600 to-indigo-600 text-white">
-          <CardContent className="pt-8">
+        <Card className="border-0 shadow-2xl bg-gradient-to-br from-purple-600 via-indigo-600 to-purple-700 text-white overflow-hidden relative">
+          <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:20px_20px]"></div>
+          <CardContent className="pt-8 pb-8 relative">
             <div className="text-center space-y-4">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full">
-                <Award className="w-10 h-10" />
+              <div className="inline-flex items-center justify-center w-24 h-24 bg-white/20 backdrop-blur-sm rounded-full shadow-lg">
+                <Award className="w-12 h-12" />
               </div>
               <div>
                 <h2 className="text-sm font-semibold text-purple-100 uppercase tracking-wide">Overall Compliance Score</h2>
-                <p className="text-6xl font-bold mt-2">{overallScore}%</p>
-                <p className="text-purple-100 mt-2">Across all ISO standards</p>
+                <p className="text-7xl font-bold mt-3 mb-2">{overallScore}%</p>
+                <p className="text-purple-100 text-base">Across all ISO standards</p>
+              </div>
+              <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto pt-6">
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
+                  <Award className="w-6 h-6 mx-auto mb-2" />
+                  <p className="text-2xl font-bold">{iso9001Score}%</p>
+                  <p className="text-xs text-purple-100">Quality</p>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
+                  <Leaf className="w-6 h-6 mx-auto mb-2" />
+                  <p className="text-2xl font-bold">{iso14001Score}%</p>
+                  <p className="text-xs text-purple-100">Environment</p>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
+                  <Shield className="w-6 h-6 mx-auto mb-2" />
+                  <p className="text-2xl font-bold">{iso45001Score}%</p>
+                  <p className="text-xs text-purple-100">Safety</p>
+                </div>
               </div>
             </div>
           </CardContent>
