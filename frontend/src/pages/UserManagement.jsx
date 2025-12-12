@@ -274,14 +274,14 @@ const UserManagement = ({ api }) => {
               <div className="space-y-2">
                 <Label htmlFor="cooperative_id">Cooperative Assignment</Label>
                 <Select 
-                  value={formData.cooperative_id} 
-                  onValueChange={(value) => setFormData({...formData, cooperative_id: value})}
+                  value={formData.cooperative_id || "none"} 
+                  onValueChange={(value) => setFormData({...formData, cooperative_id: value === "none" ? '' : value})}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select cooperative" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">None</SelectItem>
+                    <SelectItem value="none">None</SelectItem>
                     {cooperatives.map(coop => (
                       <SelectItem key={coop.id} value={coop.id}>{coop.name}</SelectItem>
                     ))}
