@@ -91,7 +91,17 @@ function App() {
           />
           <Route 
             path="/data-entry" 
-            element={user?.role === "manager" ? <DataEntry user={user} setUser={setUser} api={api} /> : <Navigate to="/login" />} 
+            element={(user?.role === "manager" || user?.role === "farmer") ? <DataEntry user={user} setUser={setUser} api={api} /> : <Navigate to="/login" />} 
+          />
+          
+          {/* Farmer Routes */}
+          <Route 
+            path="/farmer-home" 
+            element={user?.role === "farmer" ? <FarmerHome user={user} setUser={setUser} api={api} /> : <Navigate to="/login" />} 
+          />
+          <Route 
+            path="/farmer-community" 
+            element={user?.role === "farmer" ? <FarmerCommunity user={user} api={api} /> : <Navigate to="/login" />} 
           />
           
           {/* Shared Routes */}
