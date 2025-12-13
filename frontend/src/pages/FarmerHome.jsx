@@ -109,7 +109,7 @@ const FarmerHome = ({ user, setUser, api }) => {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card className="border-0 shadow-lg bg-gradient-to-br from-green-500 to-emerald-600 text-white">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
@@ -148,7 +148,66 @@ const FarmerHome = ({ user, setUser, api }) => {
               </div>
             </CardContent>
           </Card>
+
+          <Card className="border-0 shadow-lg bg-gradient-to-br from-purple-500 to-pink-600 text-white">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-semibold text-purple-100 mb-1">Earnings Estimate</p>
+                  <p className="text-4xl font-bold">${(stats.total * 3.5 * (stats.avgQuality / 100)).toFixed(0)}</p>
+                  <p className="text-xs text-purple-100 mt-2">Grade A pricing</p>
+                </div>
+                <DollarSign className="w-12 h-12 text-purple-100" />
+              </div>
+            </CardContent>
+          </Card>
         </div>
+
+        {/* Quick Stats Summary */}
+        <Card className="border-0 shadow-lg">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <BarChart3 className="w-5 h-5 text-green-600" />
+              My Performance Summary
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Total Harvests</span>
+                  <span className="font-bold">{myProduction.length} entries</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Average per Harvest</span>
+                  <span className="font-bold">{(stats.total / myProduction.length || 0).toFixed(0)} kg</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Best Quality</span>
+                  <span className="font-bold text-green-600">{Math.max(...myProduction.map(p => p.grade_a_percent), 0).toFixed(0)}%</span>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Estimated Total Earnings</span>
+                  <span className="font-bold text-green-600">${(stats.total * 3.0).toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Potential if Grade A</span>
+                  <span className="font-bold text-blue-600">${(stats.total * 3.5).toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Improvement Potential</span>
+                  <span className="font-bold text-purple-600">+${((stats.total * 3.5) - (stats.total * 3.0)).toFixed(2)}</span>
+                </div>
+              </div>
+              <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-4 rounded-lg border border-green-200">
+                <p className="text-sm font-semibold text-green-900 mb-2">🎯 Your Goal</p>
+                <p className="text-xs text-green-800">Increase Grade A to 90% to earn ${(stats.total * 3.5 * 0.9).toFixed(0)} (${((stats.total * 3.5 * 0.9) - (stats.total * 3.0)).toFixed(0)} more!)</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Production Trend */}
         <Card className="border-0 shadow-lg">
