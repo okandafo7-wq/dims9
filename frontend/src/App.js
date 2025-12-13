@@ -5,6 +5,8 @@ import axios from "axios";
 import Login from "@/pages/Login";
 import CooperativeOverview from "@/pages/CooperativeOverview";
 import ManagerHome from "@/pages/ManagerHome";
+import FarmerHome from "@/pages/FarmerHome";
+import FarmerCommunity from "@/pages/FarmerCommunity";
 import DataEntry from "@/pages/DataEntry";
 import Dashboard from "@/pages/Dashboard";
 import WhatIfSimulator from "@/pages/WhatIfSimulator";
