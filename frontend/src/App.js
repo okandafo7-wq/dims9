@@ -64,7 +64,9 @@ function App() {
 
   const getHomeRoute = () => {
     if (!user) return "/login";
-    return user.role === "officer" ? "/overview" : "/home";
+    if (user.role === "officer") return "/overview";
+    if (user.role === "farmer") return "/farmer-home";
+    return "/home";
   };
 
   return (
