@@ -300,6 +300,73 @@ const FarmerHome = ({ user, setUser, api }) => {
           </Card>
         </div>
 
+        {/* Quick Tips & Insights */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Card className="border-0 shadow-lg">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-lg">
+                💡 Quality Improvement Tips
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="bg-blue-50 border-l-4 border-blue-500 p-3 rounded">
+                <p className="text-sm font-semibold text-blue-900 mb-1">Sort Immediately After Harvest</p>
+                <p className="text-xs text-blue-800">Sorting within 2 hours prevents quality degradation and increases Grade A by 15%.</p>
+              </div>
+              <div className="bg-green-50 border-l-4 border-green-500 p-3 rounded">
+                <p className="text-sm font-semibold text-green-900 mb-1">Morning Harvest is Best</p>
+                <p className="text-xs text-green-800">Harvesting before 9 AM ensures cooler temperatures and better product freshness.</p>
+              </div>
+              <div className="bg-purple-50 border-l-4 border-purple-500 p-3 rounded">
+                <p className="text-sm font-semibold text-purple-900 mb-1">Clean Storage = Higher Price</p>
+                <p className="text-xs text-purple-800">Sanitized containers can increase quality premium by 20-30% and reduce loss by half.</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-0 shadow-lg">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-lg">
+                🏆 Your Achievements
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {stats.avgQuality > 80 && (
+                <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-yellow-100 to-yellow-200 rounded-lg border border-yellow-300">
+                  <Award className="w-8 h-8 text-yellow-600" />
+                  <div>
+                    <p className="font-bold text-yellow-900">Quality Champion</p>
+                    <p className="text-xs text-yellow-800">Maintaining 80%+ Grade A quality</p>
+                  </div>
+                </div>
+              )}
+              {stats.avgLoss < 5 && (
+                <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-green-100 to-green-200 rounded-lg border border-green-300">
+                  <Award className="w-8 h-8 text-green-600" />
+                  <div>
+                    <p className="font-bold text-green-900">Low Waste Hero</p>
+                    <p className="text-xs text-green-800">Keeping loss under 5% - excellent!</p>
+                  </div>
+                </div>
+              )}
+              {myProduction.length >= 7 && (
+                <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-blue-100 to-blue-200 rounded-lg border border-blue-300">
+                  <Award className="w-8 h-8 text-blue-600" />
+                  <div>
+                    <p className="font-bold text-blue-900">Consistent Logger</p>
+                    <p className="text-xs text-blue-800">Regular data entry - keep it up!</p>
+                  </div>
+                </div>
+              )}
+              {stats.avgQuality <= 80 && stats.avgLoss >= 5 && myProduction.length < 7 && (
+                <div className="text-center py-4 text-gray-500">
+                  <p className="text-sm">Keep logging data to unlock achievements!</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Upcoming Tasks */}
         <Card className="border-0 shadow-lg">
           <CardHeader>
@@ -310,28 +377,72 @@ const FarmerHome = ({ user, setUser, api }) => {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              <div className="flex items-start gap-3 p-3 bg-purple-50 rounded-lg border border-purple-200">
+              <div className="flex items-start gap-3 p-3 bg-purple-50 rounded-lg border border-purple-200 hover:shadow-md transition-shadow cursor-pointer">
                 <Calendar className="w-5 h-5 text-purple-600 mt-0.5" />
-                <div>
+                <div className="flex-1">
                   <p className="font-semibold text-purple-900 text-sm">ISO 9001 Quality Training</p>
-                  <p className="text-xs text-purple-700">Friday, Dec 15 • 10:00 AM</p>
+                  <p className="text-xs text-purple-700">Friday, Dec 15 • 10:00 AM - 12:00 PM</p>
+                  <p className="text-xs text-purple-600 mt-1">📍 Cooperative Training Hall</p>
                 </div>
+                <span className="text-xs bg-purple-200 text-purple-800 px-2 py-1 rounded-full">2 days</span>
               </div>
-              <div className="flex items-start gap-3 p-3 bg-green-50 rounded-lg border border-green-200">
+              <div className="flex items-start gap-3 p-3 bg-green-50 rounded-lg border border-green-200 hover:shadow-md transition-shadow cursor-pointer">
                 <Leaf className="w-5 h-5 text-green-600 mt-0.5" />
-                <div>
+                <div className="flex-1">
                   <p className="font-semibold text-green-900 text-sm">Environmental Safety Briefing</p>
-                  <p className="text-xs text-green-700">Monday, Dec 18 • 2:00 PM</p>
+                  <p className="text-xs text-green-700">Monday, Dec 18 • 2:00 PM - 3:30 PM</p>
+                  <p className="text-xs text-green-600 mt-1">📍 Main Office Conference Room</p>
                 </div>
+                <span className="text-xs bg-green-200 text-green-800 px-2 py-1 rounded-full">5 days</span>
               </div>
-              <div className="flex items-start gap-3 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+              <div className="flex items-start gap-3 p-3 bg-yellow-50 rounded-lg border border-yellow-200 hover:shadow-md transition-shadow cursor-pointer">
                 <Award className="w-5 h-5 text-yellow-600 mt-0.5" />
-                <div>
+                <div className="flex-1">
                   <p className="font-semibold text-yellow-900 text-sm">Annual Certification Audit</p>
-                  <p className="text-xs text-yellow-700">Tuesday, Dec 20 • All Day</p>
+                  <p className="text-xs text-yellow-700">Tuesday, Dec 20 • All Day Event</p>
+                  <p className="text-xs text-yellow-600 mt-1">📍 Entire Facility - Be Prepared!</p>
                 </div>
+                <span className="text-xs bg-yellow-200 text-yellow-800 px-2 py-1 rounded-full">7 days</span>
               </div>
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Weather & Best Times (Mock Data) */}
+        <Card className="border-0 shadow-lg bg-gradient-to-br from-sky-50 to-blue-50">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              ☀️ Best Harvest Times This Week
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="text-center p-3 bg-white rounded-lg border border-blue-200">
+                <p className="text-xs text-gray-500 mb-1">Monday</p>
+                <p className="text-2xl mb-1">🌤️</p>
+                <p className="text-xs font-bold text-green-600">6-9 AM</p>
+                <p className="text-xs text-gray-600">22°C</p>
+              </div>
+              <div className="text-center p-3 bg-white rounded-lg border border-blue-200">
+                <p className="text-xs text-gray-500 mb-1">Tuesday</p>
+                <p className="text-2xl mb-1">☀️</p>
+                <p className="text-xs font-bold text-green-600">5-8 AM</p>
+                <p className="text-xs text-gray-600">21°C</p>
+              </div>
+              <div className="text-center p-3 bg-white rounded-lg border border-blue-200">
+                <p className="text-xs text-gray-500 mb-1">Wednesday</p>
+                <p className="text-2xl mb-1">🌦️</p>
+                <p className="text-xs font-bold text-orange-600">Skip</p>
+                <p className="text-xs text-gray-600">Rain</p>
+              </div>
+              <div className="text-center p-3 bg-white rounded-lg border border-blue-200">
+                <p className="text-xs text-gray-500 mb-1">Thursday</p>
+                <p className="text-2xl mb-1">☀️</p>
+                <p className="text-xs font-bold text-green-600">6-9 AM</p>
+                <p className="text-xs text-gray-600">23°C</p>
+              </div>
+            </div>
+            <p className="text-xs text-center text-gray-500 mt-3">💡 Harvest during recommended times for optimal quality</p>
           </CardContent>
         </Card>
       </main>
